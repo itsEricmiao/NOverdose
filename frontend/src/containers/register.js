@@ -1,4 +1,6 @@
 import React from 'react';
+import './register.css'
+import logo from './logo.png';
 import { Redirect } from 'react-router-dom';
 
 
@@ -20,8 +22,11 @@ export class RegisterPage extends React.Component {
     render() {
         return <>
             <form className="container">
-                <h1>Register Account</h1>
-                <div className="form-group">
+            <div class="imgcontainer">
+                <h1>Register</h1>
+                <img src={logo} alt="Avatar" class="avatar"></img>
+            </div>
+                <div className="register-form">
                     <label htmlFor="name">Name</label>
                     <input type="text"
                         id="name"
@@ -31,7 +36,7 @@ export class RegisterPage extends React.Component {
                         onChange={ e => this.setState({ name: e.target.value }) } />
                 </div>
 
-                <div className="form-group">
+                <div className="register-form">
                     <label htmlFor="email">Email</label>
                     <input type="text"
                         id="email"
@@ -42,7 +47,7 @@ export class RegisterPage extends React.Component {
                 </div>
                   
 
-                <div className="form-group">
+                <div className="register-form">
                     <label htmlFor="email">Password</label>
                     <input type="text"
                         id="email"
@@ -52,10 +57,10 @@ export class RegisterPage extends React.Component {
                         onChange={ e => this.setState({ password: e.target.value }) } />
                 </div>
 
-                    <div className="col-3">
+                <div className="col-3">
                         <button className = "registerButton" type="button"  onClick={this.registerUser}>Register</button>
                         { this.state.register  && <Redirect to="/homePage" /> }
-                    </div>
+                </div>
             </form>
         </>;
     }

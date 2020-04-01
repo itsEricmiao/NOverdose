@@ -45,7 +45,7 @@ class Login extends React.Component{
                                             name="email"
                                             value={this.state.email}
                                             onChange={ e => this.setState({ email: e.target.value }) }
-                                            placeholder="Enter Email"
+                                            placeholder="email"
                                         />
                 </form>
             </div>
@@ -57,14 +57,14 @@ class Login extends React.Component{
                                         name="email"
                                         value={this.state.password}
                                         onChange={ e => this.setState({ password: e.target.value }) }
-                                        placeholder="Enter Email"
+                                        placeholder="password"
                                     />
             </form>
             <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
             onClick={this.authenticateUser}>Log In</button>
             { this.state.authenticated  && <Redirect to="/homePage" /> }
-            <button className = "registerButton" type="button"  onClick={this.registerUser}>Register</button>
-            { this.state.register  && <Redirect to="/register" /> }
+            <button className="registerButton" type="button" onClick={this.registerUser}>Register</button>
+            {this.state.register && <Redirect to="/register" />}
             </div>
             </>;
     }
