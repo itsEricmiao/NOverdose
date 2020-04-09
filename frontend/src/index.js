@@ -4,9 +4,9 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Login from './containers/login.js';
-import Register from'./containers/register.js';
-import HomePage from './containers/homePage.js';
+import Login from './componets/login.js';
+import Register from'./componets/register.js';
+import HomePage from './componets/homePage.js';
 
 const routing = (
   <Router>
