@@ -1,0 +1,44 @@
+nav{
+    background: royalblue;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3.5em;
+    z-index: 1;
+}
+
+nav ul{
+  padding: 0;
+    text-align: left;
+}
+
+.Title{
+    float: left;
+    display: inline;
+    margin-right: 2em;
+  margin-left: 1em;
+  color: white;
+}
+
+nav li{
+    float: right;
+    display: inline;
+    margin-right: 2em;
+  margin-left: 1em;
+}
+
+nav  a{
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover{
+    background: white;
+  color: black;
+}
+
+h1{
+    font-size: 2em;
+    margin-top:3em;
+}
