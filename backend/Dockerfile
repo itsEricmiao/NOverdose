@@ -3,3 +3,5 @@ WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
 EXPOSE 8000
+
+COPY ./init.sql /docker-entrypoint-initdb.d/
