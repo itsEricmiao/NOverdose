@@ -1,8 +1,9 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './homePage.css';
 
 class Home extends React.Component{
+
 	logoutUser = e => {
         this.setState({logout: true});
 	}
@@ -29,7 +30,9 @@ class Home extends React.Component{
 						<a href = "">Profile</a>
 					</li>
 					<li>
-						<a onClick = {<Redirect to="/login"/>} >Home</a>
+					<Link to={'/home'}>
+						<a >Home</a>
+					</Link>
 					</li>
 				</ul>
 			</nav>

@@ -1,7 +1,7 @@
 import React from 'react';
 import './register.css'
 import logo from './logo.png';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 export class RegisterPage extends React.Component {
@@ -14,10 +14,6 @@ export class RegisterPage extends React.Component {
         email: '',
         password: ''
     };
-
-    registerUser = e => {
-        this.setState({register: true});
-    }
 
     render() {
         return <>
@@ -57,10 +53,10 @@ export class RegisterPage extends React.Component {
                         onChange={ e => this.setState({ password: e.target.value }) } />
                 </div>
 
-                <div className="col-3">
-                        <button className = "registerButton" type="button"  onClick={this.registerUser}>Register</button>
-                        { this.state.register  && <Redirect to="/homePage" /> }
-                </div>
+                            <Link to={'/home'}>
+                            <button className = "registerButton" type="button"  onClick={this.registerUser}>
+                            Register</button>
+                            </Link>
             </form>
         </>;
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import './login.css'
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import logo from './logo.png';
 
 
@@ -63,8 +63,10 @@ class Login extends React.Component{
             <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
             onClick={this.authenticateUser}>Log In</button>
             { this.state.authenticated  && <Redirect to="/homePage" /> }
-            <button className="registerButton" type="button" onClick={this.registerUser}>Register</button>
-            {this.state.register && <Redirect to="/register" />}
+            <Link to={'/register'}>
+                            <button className = "registerButton" type="button"  onClick={this.registerUser}>
+                            Register</button>
+            </Link>
             </div>
             </>;
     }
