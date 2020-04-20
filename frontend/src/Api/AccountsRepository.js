@@ -8,18 +8,6 @@ export class AccountsRepository {
     config = {
     };
 
-    getAccounts() {
-        return new Promise((resolve, reject) => {
-            axios.get(`${this.url}`, this.config)
-                .then(x => resolve(x.data))
-                .catch(x => {
-                    console.log(x);
-                    alert(x); // handle error
-                    reject(x);
-                });
-        });
-    }
-
     login(email, password) {
         console.log("login password", password);
         let obj = {

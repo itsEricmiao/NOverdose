@@ -3,7 +3,7 @@ import './login.css'
 import { Redirect } from 'react-router-dom';
 import logo from './logo.png';
 import { AccountsRepository } from './../Api/AccountsRepository';
-import {LoginButton} from './loginButton';
+import {LoginButton, ErrorMessage} from './loginButton';
 
 
 class Login extends React.Component{
@@ -11,6 +11,7 @@ class Login extends React.Component{
     accountRepository = new AccountsRepository();
 
     onLogin() {
+        this.setState({authenticated: false}); 
         this.accountRepository.login(this.state.email, this.state.password).then(user => {
             this.setState({authenticated: true});
         });
@@ -23,7 +24,7 @@ class Login extends React.Component{
     state = {
         email: "",
         password: "",
-        authenticated: false
+        authenticated: null
       };
 
     render(){
@@ -33,6 +34,8 @@ class Login extends React.Component{
                 <h1>Welcome to NOverdose!</h1>
                 <img src={logo} alt="Avatar" class="avatar"></img>
             </div>
+
+            {this.state.authenticated === false && <ErrorMessage/>}
 
             <div className="login-form">
                 <form>

@@ -84,3 +84,8 @@ img.avatar {
 .registerButton{
     margin-left: 60px;
 }
+
+.error{
+    color: red;
+    text-align: center;
+}
