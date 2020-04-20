@@ -11,3 +11,12 @@ export const LoginButton = props => {
     </div>
                             
 }
+
+export const ErrorMessage = props => {
+    
+    console.log('here');
+    return<div>
+        <h3 className = "error">Invalid Email or Password Please Try Again</h3>
+    </div>
+                            
+}
