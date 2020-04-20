@@ -34,8 +34,9 @@ app.use(ExpressAPILogMiddleware(logger, { request: true }));
 
 //Attempting to connect to the database.
 connection.connect(function (err) {
-  if (err)
-    logger.error("Cannot connect to DB!");
+  if (err){
+    console.log(err);
+  }
   logger.info("Connected to the DB!");
 });
 
@@ -112,5 +113,64 @@ app.get('/users/:uid', function (req, res) {
 });
 
 
+  
+app.post('/createUser', (req, res) => {
+  connection.query('DROP table if exists users', function (err, rows, fields) {
+    if (err)
+      logger.error("Can't drop table");
+    });
+  connection.query('CREATE table users (id varchar(4), email varchar(50), password varchar(50))', function (err, rows, fields) {
+    if (err)
+      logger.error("Problem creating the table child_user");
+  });
+  res.status(200).send('User table has been created!!');
+});
+
+
+app.post("/addUser/:id/:email/:password", function (req, res) {
+  connection.query('insert into users values(?, ?, ?)', [req.params['id'], req.params['email'],req.params['password']], function(err, rows, fields) {
+    if(err)
+      logger.error('adding row to table failed');
+  });
+  res.status(200).send("User has been added!");
+});
+
+app.get("/users", function (req, res) {
+  let query = "select * from users;";
+  connection.query(query, function(err,rows, fields) {
+    if(err){
+        logger.error("No user");
+        res.status(400).send(err);
+        res.status(400).json({
+          "data": [],
+          "error": "MySQL error"
+        });
+      }
+      else{
+        res.status(200).json({
+          "Data": rows
+        });
+      }  
+  })
+});
+
+app.get("/login", function (req, res) {
+    let email = req.query.email;
+    let password = req.query.password;
+    let query = "select * from users where email = '" + email + "' and password = '" + password + "' limit 1;";
+    connection.query(query, function(err, rows, field) {
+      console.log("req", req.query);
+      if(rows == null  ||rows.length == 0 || err){
+        logger.error("INVALID");
+        res.status(400);
+      }
+      else{
+        console.log('LOGGED IN');
+        res.status(200).json({
+          "data": rows[0]
+        })
+      }
+    })
+});
 
 
