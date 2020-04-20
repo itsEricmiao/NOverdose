@@ -2,31 +2,28 @@ import React from 'react';
 import './login.css'
 import { Redirect } from 'react-router-dom';
 import logo from './logo.png';
+import { AccountsRepository } from './../Api/AccountsRepository';
+import {LoginButton} from './loginButton';
 
 
 class Login extends React.Component{
-    
-    passwords = ["abc123"];
-    emails = ["john@smu.edu"];
 
-    authenticateUser = e => {
-        if ("john@smu.edu" === this.state.email && "abc123" === this.state.password)  
-        {
-          this.setState({ authenticated: true });
-          console.log('Logged IN');
-        }
-        else 
-        {
-            this.setState({ authenticated: false });
-        }
-    }
+    accountRepository = new AccountsRepository();
+
+    onLogin() {
+        this.accountRepository.login(this.state.email, this.state.password).then(user => {
+            this.setState({authenticated: true});
+        });
+    
+      }
     registerUser = e => {
         this.setState({register: true});
     }
 
     state = {
         email: "",
-        password: ""
+        password: "",
+        authenticated: false
       };
 
     render(){
@@ -61,10 +58,12 @@ class Login extends React.Component{
                                     />
             </form>
             <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
-            onClick={this.authenticateUser}>Log In</button>
-            { this.state.authenticated  && <Redirect to="/homePage" /> }
+            onClick={() => this.onLogin()}>Log In</button>
             <button className="registerButton" type="button" onClick={this.registerUser}>Register</button>
             {this.state.register && <Redirect to="/register" />}
+
+
+            {this.state.authenticated && <LoginButton/>}
             </div>
             </>;
     }
