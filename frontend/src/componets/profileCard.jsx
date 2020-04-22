@@ -1,7 +1,7 @@
 import React from "react";
 import Tag from "./Tag";
 import "./profileCard.css";
-export class profileCard extends React.Component{
+export class ProfileCard extends React.Component{
   render() {
     var cardColor = "#9EC0FE";
     return (
