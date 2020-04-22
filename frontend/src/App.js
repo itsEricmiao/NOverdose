@@ -4,7 +4,6 @@ import { ProfileCard } from "./componets/profileCard";
 import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
 import { ROUTES } from './routes';
 import DrugCard from './componets/DrugCard';
-import { Card, Button, Icon } from "semantic-ui-react";
 import './componets/semantic-ui-css/semantic.min.css';
 class App extends Component {
   render() {
@@ -25,7 +24,7 @@ class App extends Component {
     },
     {
       id: "002",
-      name: "Vitamin A",
+      name: "Vitamin C",
       price: "$120",
       description:"Vitamin A helps your body absorb calcium. Calcium is one of the main building blocks of bone. A lack of vitamin D can lead to bone diseases such as osteoporosis or rickets. Vitamin D also has a role in your nerve, muscle, and immune systems. You can get vitamin D in three ways: through your skin (from sunlight), from your diet, and from supplements. Your body forms vitamin D naturally after exposure to sunlight. However, too much sun exposure can lead to skin aging and skin cancer.",
       sideEffect: "Side effect goes here",
@@ -33,7 +32,7 @@ class App extends Component {
       },
       {
         id: "003",
-        name: "Vitamin V",
+        name: "Vitamin B",
         price: "$120",
         description:"Vitamin A helps your body absorb calcium. Calcium is one of the main building blocks of bone. A lack of vitamin D can lead to bone diseases such as osteoporosis or rickets. Vitamin D also has a role in your nerve, muscle, and immune systems. You can get vitamin D in three ways: through your skin (from sunlight), from your diet, and from supplements. Your body forms vitamin D naturally after exposure to sunlight. However, too much sun exposure can lead to skin aging and skin cancer.",
         sideEffect: "Side effect goes here",
@@ -55,12 +54,12 @@ class App extends Component {
           </Switch>
         </Router> */}
         
-        <h1>Cute Pug's Prescription</h1>
+        <h1 style={{"textAlign":"center"}}>Cute Pug's Prescription</h1>
         <div className="DrugCard" style={{"font-family": "sans-serif", "text-align": "center", "background": "whitesmoke"}}>
           <ProfileCard user={user} cardColor={"#9EC0FE"} />
-          <Card.Group itemsPerRow={3}>
+          <div className="allCards" style={{"columns": "2"}}>
             {drugs.map((x, y) => <DrugCard key={y}  {...x} />)}
-            </Card.Group>
+          </div>
         </div>
       </>
     );
