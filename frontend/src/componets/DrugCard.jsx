@@ -60,8 +60,8 @@ export default function DrugCard(drug) {
   }
 
     return (
-    <div className="DrugCard">
-        <Card fluid color="blue" style={{ height: "100%" }}>
+        <div className="DrugCard" style={{padding: "20px",margin: "20px"}}>
+        <Card fluid color="blue" style={{ height: "100%"}}>
                     <Card.Content header={drug.name} textAlign="center" />
                     <Card.Content header={ drug.price} textAlign="center" />
                     <Card.Content description={drug.description} />
