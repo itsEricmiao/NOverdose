@@ -112,6 +112,30 @@ app.get('/users/:uid', function (req, res) {
 	});
 });
 
+//Get drug info from name
+app.get('/drugs/:name', function (req, res) {
+   var name = req.param('name')
+	connection.query("SELECT * FROM drugs d JOIN sideEffects se ON d.sideEffectId = se.sideEffectId WHERE d.name = ?", name, function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+		//res.send(result)
+	});
+});
+
+app.post('/addDrug/:name/:desc/:effId', function (req, res) { //add new drug
+
+	var name = req.param("name");
+	var desc = req.param("desc");
+	var effId = req.param("effId");
+	
+	connection.query("INSERT INTO drugs VALUES(null,?,?,?)",
+	[name,desc,effId],
+	function(err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result));
+		res.send(result)
+	});
+});
 
   
 app.post('/createUser', (req, res) => {
