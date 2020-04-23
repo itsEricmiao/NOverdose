@@ -200,7 +200,7 @@ app.get("/login", function (req, res) {
 
 // POST
 // /perscription post
-router.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
+app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
 	var id = req.param('id');
 	var uid = req.param('uid');
 	var drugId = req.param('drugId');
@@ -208,7 +208,7 @@ router.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', asy
 	var cost = req.param('cost');
 	var pharmacy = req.param('pharmacy');
 	
-	  con.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [id, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
+	  connection.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [id, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
 		  if (err) throw err;
 		  res.end(JSON.stringify(result)); // Result in JSON format
 	  });
@@ -216,11 +216,11 @@ router.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', asy
 
 
 //DELETE perscription for user
-router.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
+app.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
 	var uid = req.param('uid');
 	var drugid = req.param('drugid');
 	
-	  con.query("DELETE FROM perscriptions WHERE uid = ? AND drugid = ?", [uid, drugid] ,function (err, result, fields) {
+	  connection.query("DELETE FROM perscriptions WHERE uid = ? AND drugid = ?", [uid, drugid] ,function (err, result, fields) {
 		  if (err) 
 			  return console.error(error.message);
 		  res.end(JSON.stringify(result)); 
@@ -228,16 +228,16 @@ router.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
   });
 
 //DELET ACCOUNT
-router.delete('/deleteaccount/:uid', async (req, res) => {
+app.delete('/deleteaccount/:uid', async (req, res) => {
 	var uid = req.param('uid');
 
-	  con.query("DELETE FROM perscriptions WHERE uid = ?", uid,function (err, result, fields) {
+	  connection.query("DELETE FROM perscriptions WHERE uid = ?", uid,function (err, result, fields) {
 		  if (err) 
 			  return console.error(error.message);
 		  res.end(JSON.stringify(result)); 
 		});
 
-	con.query("DELETE FROM users WHERE uid = ?", uid,function (err, result, fields) {
+	connection.query("DELETE FROM users WHERE uid = ?", uid,function (err, result, fields) {
 		if (err) 
 			return console.error(error.message);
 		res.end(JSON.stringify(result)); 
@@ -245,10 +245,10 @@ router.delete('/deleteaccount/:uid', async (req, res) => {
   });
 
 //DELETE Pharmacy
-router.delete('/removepharmacy/:pharmacy', async (req, res) => {
+app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 	var pharmacy = req.param('pharmacy');
 
-	  con.query("DELETE FROM perscriptions WHERE pharmacy = ?", pharmacy,function (err, result, fields) {
+	  connection.query("DELETE FROM perscriptions WHERE pharmacy = ?", pharmacy,function (err, result, fields) {
 		  if (err) 
 			  return console.error(error.message);
 		  res.end(JSON.stringify(result)); 
@@ -259,8 +259,8 @@ router.delete('/removepharmacy/:pharmacy', async (req, res) => {
 
 
 // GET persciptions
-router.get('allperscriptions', function (req, res) {
-	con.query("SELECT * FROM perscriptions GROUP BY uid", function (err, result, fields) {
+app.get('allperscriptions', function (req, res) {
+	connection.query("SELECT * FROM perscriptions GROUP BY uid", function (err, result, fields) {
     if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -278,10 +278,10 @@ router.get('allperscriptions', function (req, res) {
 }); 
 
 // GET persciptions for pharmacy
-router.get('perscriptionsforpharmacy/:pharmacy', function (req, res) {
+app.get('perscriptionsforpharmacy/:pharmacy', function (req, res) {
 	var pharmacy = req.param('pharmacy');
 	
-	con.query("SELECT * FROM perscriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
+	connection.query("SELECT * FROM perscriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
 		if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -299,9 +299,9 @@ router.get('perscriptionsforpharmacy/:pharmacy', function (req, res) {
 }); 
 
 // GET persciptions for user
-router.get('/usersperscriptions/:uid', function (req, res) {
+app.get('/usersperscriptions/:uid', function (req, res) {
 	var uid = req.param('uid');
-	con.query("SELECT * FROM perscriptions WHERE uid = ?", uid, function (err, result, fields) {
+	connection.query("SELECT * FROM perscriptions WHERE uid = ?", uid, function (err, result, fields) {
 		if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -319,8 +319,8 @@ router.get('/usersperscriptions/:uid', function (req, res) {
 }); 
 
 // GET by Price for drugs
-router.get('/drugprices', function (req, res) {
-	con.query("SELECT name, price FROM drugs ORDER BY price", function (err, result, fields) {
+app.get('/drugprices', function (req, res) {
+	connection.query("SELECT name, price FROM drugs ORDER BY price", function (err, result, fields) {
 		if(err){
       logger.error("No drugs");
       res.status(400).send(err);
@@ -338,32 +338,32 @@ router.get('/drugprices', function (req, res) {
 });
 
 //PUT change price of drug
-router.put('changedrugcost/:drugId/:price', function (req, res) {
+app.put('changedrugcost/:drugId/:price', function (req, res) {
 	var drugId = req.param('drugId');
 	var price = req.param('price');
-	con.query("UPDATE perscriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
+	connection.query("UPDATE perscriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 });
 
 // PUT change cost of perscription
-router.put('/changeperscriptioncost/:uid/:drugId/:cost', function (req, res) {
+app.put('/changeperscriptioncost/:uid/:drugId/:cost', function (req, res) {
 	var uid = req.param('uid');
 	var drugId = req.param('drugId')
 	var cost = req.param('cost');
-	con.query("UPDATE perscriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
+	connection.query("UPDATE perscriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 }); 
 
 // PUT changes side effect
-router.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
+app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
 	var drugId = req.param('drugId')
 	var sideEffectId = req.param('sideEffectId');
 
-	con.query("UPDATE perscriptions SET sideEffectId = ? WHERE drugId = ?", [sideEffectId, drugId], function (err, result, fields) {
+	connection.query("UPDATE perscriptions SET sideEffectId = ? WHERE drugId = ?", [sideEffectId, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
