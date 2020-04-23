@@ -1,32 +1,30 @@
 import React from 'react';
 import './login.css'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import logo from './logo.png';
+import { NoverdoseRepo } from './../Api/NoverdoseRepo';
+import {LoginButton, ErrorMessage} from './loginButton';
 
 
 class Login extends React.Component{
-    
-    passwords = ["abc123"];
-    emails = ["john@smu.edu"];
 
-    authenticateUser = e => {
-        if ("john@smu.edu" === this.state.email && "abc123" === this.state.password)  
-        {
-          this.setState({ authenticated: true });
-          console.log('Logged IN');
-        }
-        else 
-        {
-            this.setState({ authenticated: false });
-        }
-    }
+    noverdoseRepo = new NoverdoseRepo();
+
+    onLogin() {
+        this.setState({authenticated: false}); 
+        this.noverdoseRepo.login(this.state.email, this.state.password).then(user => {
+            this.setState({authenticated: true});
+        });
+    
+      }
     registerUser = e => {
         this.setState({register: true});
     }
 
     state = {
         email: "",
-        password: ""
+        password: "",
+        authenticated: null
       };
 
     render(){
@@ -36,6 +34,8 @@ class Login extends React.Component{
                 <h1>Welcome to NOverdose!</h1>
                 <img src={logo} alt="Avatar" class="avatar"></img>
             </div>
+
+            {this.state.authenticated === false && <ErrorMessage/>}
 
             <div className="login-form">
                 <form>
@@ -61,10 +61,13 @@ class Login extends React.Component{
                                     />
             </form>
             <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
-            onClick={this.authenticateUser}>Log In</button>
-            { this.state.authenticated  && <Redirect to="/homePage" /> }
-            <button className="registerButton" type="button" onClick={this.registerUser}>Register</button>
-            {this.state.register && <Redirect to="/register" />}
+            onClick={() => this.onLogin()}>Log In</button>
+            <Link to={'register'}>
+            <button className="registerButton" type="button">Register</button>
+            </Link>
+
+
+            {this.state.authenticated && <LoginButton/>}
             </div>
             </>;
     }

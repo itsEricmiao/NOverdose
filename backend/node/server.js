@@ -34,8 +34,9 @@ app.use(ExpressAPILogMiddleware(logger, { request: true }));
 
 //Attempting to connect to the database.
 connection.connect(function (err) {
-  if (err)
-    logger.error("Cannot connect to DB!");
+  if (err){
+    console.log(err);
+  }
   logger.info("Connected to the DB!");
 });
 
@@ -104,7 +105,7 @@ app.listen(config.port, config.host, (e) => {
 
 app.get('/users/:uid', function (req, res) {
    var uid = req.param('uid')
-	connection.query("SELECT * FROM users WHERE uid = ?", uid, function (err, result, fields) {
+	connection.query("SELECT * FROM users WHERE id = ?", uid, function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 		res.send(result)
@@ -112,5 +113,82 @@ app.get('/users/:uid', function (req, res) {
 });
 
 
+  
+app.post('/createUser', (req, res) => {
+  let query = "DROP TABLE if exists users";
+  connection.query(query, (err, result) => 
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+  connection.query(query, (err, result) => {
+    if(err) { 
+      console.log("Errpr creaing parent user", err);
+      res.redirect('/'); }
+  })
+  query = "ALTER TABLE users AUTO_INCREMENT = 1000;";
+  connection.query(query, (err, result) => {
+    if(err) { 
+      console.log(err);
+      res.status(400);}
+  })
+  res.status(200).send('User table has been created!!');
+});
+
+
+app.post("/addUser", function (req, res) {
+  res.status(200).send("User has been added!");
+  let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
+  console.log(req.body);
+  connection.query(query, (err, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a parent");
+      res.status(400);
+    }
+  })
+});
+
+app.get("/users", function (req, res) {
+  let query = "select * from users;";
+  connection.query(query, function(err,rows, fields) {
+    if(err){
+        logger.error("No user");
+        res.status(400).send(err);
+        res.status(400).json({
+          "data": [],
+          "error": "MySQL error"
+        });
+      }
+      else{
+        res.status(200).json({
+          "Data": rows
+        });
+      }  
+  })
+});
+
+app.get("/login", function (req, res) {
+    let email = req.query.email;
+    let password = req.query.password;
+    let query = "select * from users where email = '" + email + "' and password = '" + password + "' limit 1;";
+    connection.query(query, function(err, rows, field) {
+      console.log("req", req.query);
+      if(rows == null  ||rows.length == 0 || err){
+        logger.error("INVALID");
+        res.status(400);
+      }
+      else{
+        console.log('LOGGED IN');
+        res.status(200).json({
+          "data": rows[0]
+        })
+      }
+    })
+});
 
 

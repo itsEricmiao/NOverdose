@@ -29,7 +29,7 @@ class Home extends React.Component{
 						<a href = "">Profile</a>
 					</li>
 					<li>
-						<a onClick = {<Redirect to="/login"/>} >Home</a>
+						<a >Home</a>
 					</li>
 				</ul>
 			</nav>
@@ -37,7 +37,6 @@ class Home extends React.Component{
 		</div>
 		</>
 	}
-         
 }
 
 export default Home;
