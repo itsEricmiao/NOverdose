@@ -1,18 +1,18 @@
 import React from 'react';
 import './login.css'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import logo from './logo.png';
-import { AccountsRepository } from './../Api/AccountsRepository';
+import { NoverdoseRepo } from './../Api/NoverdoseRepo';
 import {LoginButton, ErrorMessage} from './loginButton';
 
 
 class Login extends React.Component{
 
-    accountRepository = new AccountsRepository();
+    noverdoseRepo = new NoverdoseRepo();
 
     onLogin() {
         this.setState({authenticated: false}); 
-        this.accountRepository.login(this.state.email, this.state.password).then(user => {
+        this.noverdoseRepo.login(this.state.email, this.state.password).then(user => {
             this.setState({authenticated: true});
         });
     
@@ -62,8 +62,9 @@ class Login extends React.Component{
             </form>
             <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
             onClick={() => this.onLogin()}>Log In</button>
-            <button className="registerButton" type="button" onClick={this.registerUser}>Register</button>
-            {this.state.register && <Redirect to="/register" />}
+            <Link to={'register'}>
+            <button className="registerButton" type="button">Register</button>
+            </Link>
 
 
             {this.state.authenticated && <LoginButton/>}

@@ -105,7 +105,7 @@ app.listen(config.port, config.host, (e) => {
 
 app.get('/users/:uid', function (req, res) {
    var uid = req.param('uid')
-	connection.query("SELECT * FROM users WHERE uid = ?", uid, function (err, result, fields) {
+	connection.query("SELECT * FROM users WHERE id = ?", uid, function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 		res.send(result)
@@ -139,24 +139,42 @@ app.post('/addDrug/:name/:desc/:effId', function (req, res) { //add new drug
 
   
 app.post('/createUser', (req, res) => {
-  connection.query('DROP table if exists users', function (err, rows, fields) {
-    if (err)
-      logger.error("Can't drop table");
-    });
-  connection.query('CREATE table users (id varchar(4), email varchar(50), password varchar(50))', function (err, rows, fields) {
-    if (err)
-      logger.error("Problem creating the table child_user");
+  let query = "DROP TABLE if exists users";
+  connection.query(query, (err, result) => 
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
   });
+  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+  connection.query(query, (err, result) => {
+    if(err) { 
+      console.log("Errpr creaing parent user", err);
+      res.redirect('/'); }
+  })
+  query = "ALTER TABLE users AUTO_INCREMENT = 1000;";
+  connection.query(query, (err, result) => {
+    if(err) { 
+      console.log(err);
+      res.status(400);}
+  })
   res.status(200).send('User table has been created!!');
 });
 
 
-app.post("/addUser/:id/:email/:password", function (req, res) {
-  connection.query('insert into users values(?, ?, ?)', [req.params['id'], req.params['email'],req.params['password']], function(err, rows, fields) {
-    if(err)
-      logger.error('adding row to table failed');
-  });
+app.post("/addUser", function (req, res) {
   res.status(200).send("User has been added!");
+  let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
+  console.log(req.body);
+  connection.query(query, (err, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a parent");
+      res.status(400);
+    }
+  })
 });
 
 app.get("/users", function (req, res) {

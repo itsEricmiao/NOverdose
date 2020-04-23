@@ -1,12 +1,14 @@
 import React from 'react';
 import './register.css'
 import logo from './logo.png';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import User from './../models/user';
+import { NoverdoseRepo } from './../Api/NoverdoseRepo';
 
 
 export class RegisterPage extends React.Component {
 
-    phoneTypes = [ "Home", "Fax", "Mobile", "Office" ];
+    noverdoseRepo = new NoverdoseRepo();
 
 
     state = {
@@ -15,8 +17,8 @@ export class RegisterPage extends React.Component {
         password: ''
     };
 
-    registerUser = e => {
-        this.setState({register: true});
+    registerUser(user){
+        this.noverdoseRepo.addUser(user);
     }
 
     render() {
@@ -58,8 +60,9 @@ export class RegisterPage extends React.Component {
                 </div>
 
                 <div className="col-3">
-                        <button className = "registerButton" type="button"  onClick={this.registerUser}>Register</button>
-                        { this.state.register  && <Redirect to="/homePage" /> }
+                    <Link to={'homePage'}>
+                    <button className = "registerButton" type="button"  onClick={() => this.registerUser(new User(this.state.name, this.state.email, this.state.password))}>Register</button>
+                    </Link>
                 </div>
             </form>
         </>;

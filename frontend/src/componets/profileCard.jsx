@@ -91,3 +91,5 @@ export class profileCard extends React.Component{
     );
   }
 }
+
+export default profileCard;
