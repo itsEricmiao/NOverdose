@@ -1,6 +1,6 @@
-import  Login from './componets/login.js';
-import RegisterPage from './componets/register.js';
-import  Home  from './componets/homePage.js';
+import  Login from './Componets/login.js';
+import RegisterPage from './Componets/register.js';
+import  Home  from './Componets/homePage.js';
 
 export const ROUTES = [
     { path: '/homePage', component: Home },

@@ -10,10 +10,10 @@ export class ProfileCard extends React.Component{
           style={{
             borderRadius: "5px",
             boxSizing: "border-box",
-            boxShadow: "0 0 5px 5px rgba(0, 0, 0, 0)",
+            boxShadow: "0 0 5px 25px rgba(0, 0, 0, 0)",
             display: "flex",
             flexDirection: "column",
-            height: "200px"
+            height: "250px"
           }}
         >
           <div
@@ -42,18 +42,18 @@ export class ProfileCard extends React.Component{
                 borderRadius: "50%",
                 boxShadow: `0px 0px 10px 1px ${cardColor}`,
                 position: "absolute",
-                top: "-40px",
-                Button: "50px",
+                top: "-50px",
+                Button: "80px",
                 width: "100px"
               }}
             />
 
-            <h1 style={{ fontSize: "0.8em", margin: "40px 0 10px 0" }}>
+            <h1 style={{ fontSize: "1em", margin: "70px 0 10px 0" }}>
               {this.props.user.name}
             </h1>
-            <h3 style={{ fontSize: "0.5em", margin: "0px 0 10px 0" }}>
+            <h2 style={{ fontSize: "0.8em", margin: "0px 0 10px 0" }}>
               {this.props.user.birthday}
-            </h3>
+            </h2>
 
             <div
               style={{
