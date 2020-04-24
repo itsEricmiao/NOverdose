@@ -1,7 +1,12 @@
 import React from "react";
 import Tag from "./Tag";
 import "./profileCard.css";
+
 export class ProfileCard extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     var cardColor = "#9EC0FE";
     return (
@@ -13,7 +18,7 @@ export class ProfileCard extends React.Component{
             boxShadow: "0 0 5px 25px rgba(0, 0, 0, 0)",
             display: "flex",
             flexDirection: "column",
-            height: "250px"
+            height: "300px"
           }}
         >
           <div
@@ -64,14 +69,14 @@ export class ProfileCard extends React.Component{
                 alignItems: "flex-start"
               }}
             >
-              {this.props.user.medications.map(s => (
+              {this.props.user.medications.map(item => (
                 <Tag
                   style={{
                     backgroundColor: "#9EC0FE",
                     marginRight: "5px"
                   }}
                 >
-                  {s}
+                  {item}
                 </Tag>
               ))}
             </div>

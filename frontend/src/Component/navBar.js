@@ -1,8 +1,8 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import './homePage.css';
+import './navBar.css';
 
-class Home extends React.Component{
+class NavBar extends React.Component{
 	logoutUser = e => {
         this.setState({logout: true});
 	}
@@ -33,11 +33,10 @@ class Home extends React.Component{
 					</li>
 				</ul>
 			</nav>
-			<h1>Profile Page</h1>
 		</div>
 		</>
 	}
          
 }
 
-export default Home;
+export default NavBar;
