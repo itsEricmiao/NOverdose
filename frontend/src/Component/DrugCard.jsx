@@ -1,6 +1,5 @@
 import React, { useReducer } from "react";
 import { Card, Button, Icon } from "semantic-ui-react";
-import './semantic-ui-css/semantic.min.css';
 import "./DrugCard.css";
 
 function ExtraContentAccordionClosed({ onClick }) {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './semantic-ui-css/semantic.min.css';
 import {ProfileCard} from "./profileCard";
 import DrugCard from "./DrugCard";
 import NavBar from './navBar';
