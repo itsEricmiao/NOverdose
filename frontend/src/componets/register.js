@@ -1,9 +1,9 @@
 import React from 'react';
 import './register.css'
 import logo from './logo.png';
-import { Link } from 'react-router-dom';
 import User from './../models/user';
 import { NoverdoseRepo } from './../Api/NoverdoseRepo';
+import { RegisterButton } from './loginButton';
 
 
 export class RegisterPage extends React.Component {
@@ -12,13 +12,20 @@ export class RegisterPage extends React.Component {
 
 
     state = {
+        id: '',
         name: '',
         email: '',
-        password: ''
+        password: '',
+        registered: null
     };
 
-    registerUser(user){
-        this.noverdoseRepo.addUser(user);
+    registerUser(name, email, password){
+        this.setState({registered: false});
+        this.noverdoseRepo.addUser(name, email, password)
+        .then(accountId => {new User(accountId, name, email, password); 
+            this.setState({id: accountId.id}); 
+            this.setState({registered: true});
+        });
     }
 
     render() {
@@ -60,9 +67,8 @@ export class RegisterPage extends React.Component {
                 </div>
 
                 <div className="col-3">
-                    <Link to={'homePage'}>
-                    <button className = "registerButton" type="button"  onClick={() => this.registerUser(new User(this.state.name, this.state.email, this.state.password))}>Register</button>
-                    </Link>
+                    <button className = "registerButton" type="button"  onClick={() => this.registerUser(this.state.name, this.state.email, this.state.password)}>Register</button>
+                    {this.state.registered && <RegisterButton id = {this.state.id}/>}
                 </div>
             </form>
         </>;

@@ -103,12 +103,16 @@ app.listen(config.port, config.host, (e) => {
 //API ROUTES
 
 
-app.get('/users/:uid', function (req, res) {
-   var uid = req.param('uid')
-	connection.query("SELECT * FROM users WHERE id = ?", uid, function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
-		res.send(result)
+app.get('/users/:id', function (req, res) {
+	connection.query("SELECT * FROM users WHERE id = ?", [req.params['id']], function (err, result, fields) {
+    if (err) 
+      console.log(err);
+    else
+    {
+      return res.status(200).json({
+        "user": result
+      })// Result in JSON format
+    }
 	});
 });
 
@@ -116,8 +120,10 @@ app.get('/users/:uid', function (req, res) {
 app.get('/drugs/:name', function (req, res) {
    var name = req.param('name')
 	connection.query("SELECT * FROM drugs d JOIN sideEffects se ON d.sideEffectId = se.sideEffectId WHERE d.name = ?", name, function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
+    if (err) 
+      throw err;
+    else
+		  res.end(JSON.stringify(result)); // Result in JSON format
 		//res.send(result)
 	});
 });
@@ -165,17 +171,28 @@ app.post('/createUser', (req, res) => {
 
 
 app.post("/addUser", function (req, res) {
-  res.status(200).send("User has been added!");
   let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
-  console.log(req.body);
   connection.query(query, (err, result) => {
     if(err) {
       console.log(err);
-      logger.error("failed adding a parent");
+      logger.error("failed adding a user");
       res.status(400);
     }
   })
+  var returnId;
+  query = "SELECT * FROM users WHERE NAME = '" + req.body.name + "' limit 1;"
+  connection.query(query, (err,rows,fields) => {
+    if(err){
+      res.status(400);
+    }
+    else{
+      returnId = rows[0].id;
+    }
+  res.status(200).json({
+    "id": returnId
+  })
 });
+}); 
 
 app.get("/users", function (req, res) {
   let query = "select * from users;";
@@ -197,6 +214,7 @@ app.get("/users", function (req, res) {
 });
 
 app.get("/login", function (req, res) {
+  var returnId;
     let email = req.query.email;
     let password = req.query.password;
     let query = "select * from users where email = '" + email + "' and password = '" + password + "' limit 1;";
@@ -208,10 +226,11 @@ app.get("/login", function (req, res) {
       }
       else{
         console.log('LOGGED IN');
-        res.status(200).json({
-          "data": rows[0]
-        })
+        returnId = rows[0].id;
       }
+      res.status(200).json({
+        "id": returnId
+      })
     })
 });
 

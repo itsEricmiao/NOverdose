@@ -14,6 +14,8 @@ class Login extends React.Component{
         this.setState({authenticated: false}); 
         this.noverdoseRepo.login(this.state.email, this.state.password).then(user => {
             this.setState({authenticated: true});
+            console.log(user);
+            this.setState({id: user.id});
         });
     
       }
@@ -22,6 +24,7 @@ class Login extends React.Component{
     }
 
     state = {
+        id: '',
         email: "",
         password: "",
         authenticated: null
@@ -67,7 +70,7 @@ class Login extends React.Component{
             </Link>
 
 
-            {this.state.authenticated && <LoginButton/>}
+            {this.state.authenticated && <LoginButton id = {this.state.id}/>}
             </div>
             </>;
     }
