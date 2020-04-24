@@ -13,12 +13,11 @@ class App extends Component {
   render() {
     return (
       <>
-        {/* <Router>
+        <Router>
           <Switch>
             { ROUTES.map((route, index) => <Route key={index} { ...route } />) }
           </Switch>
-        </Router> */}
-        <ProfilePage/>
+        </Router>
       </>
     );
   }

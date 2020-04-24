@@ -6,6 +6,10 @@ class NavBar extends React.Component{
 	logoutUser = e => {
         this.setState({logout: true});
 	}
+
+	goProfile = e => {
+        this.setState({profile: true});
+	}
 	
 	state = {
     };
@@ -26,7 +30,8 @@ class NavBar extends React.Component{
 						<a href = "">Search</a>
 					</li>
 					<li>
-						<a href = "">Profile</a>
+					<a href = "" onClick = {this.goProfile}>Profile </a>
+						{this.state.profile  && <Redirect to="/profile" /> }
 					</li>
 					<li>
 						<a >Home</a>

@@ -41,7 +41,7 @@ export default class ProfilePage extends React.Component {
                     </div>
 
                     <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
-                    {this.state.homePage && <Redirect to="/" />}
+                    {this.state.homePage && <Redirect to="/homePage" />}
                     <button className="btn btn-primary btn-block">Save</button>     
                 </form>
             </>
