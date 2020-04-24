@@ -7,9 +7,7 @@ import {LoginButton, ErrorMessage} from './loginButton';
 
 
 class Login extends React.Component{
-
     noverdoseRepo = new NoverdoseRepo();
-
     onLogin() {
         this.setState({authenticated: false});
         this.noverdoseRepo.login(this.state.email, this.state.password).then(user => {

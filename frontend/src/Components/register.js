@@ -58,12 +58,13 @@ export class RegisterPage extends React.Component {
                         value={this.state.password}
                         onChange={ e => this.setState({ password: e.target.value }) } />
                 </div>
-
-                <div className="col-3">
-                    <Link to={'homePage'}>
-                    <button className = "registerButton" type="button"  onClick={() => this.registerUser(new User(this.state.name, this.state.email, this.state.password))}>Register</button>
-                    </Link>
-                </div>
+               
+            
+            <div class="text-center">
+            <Link to={'homePage'}>
+                    <button className = "button" onClick={() => this.registerUser(new User(this.state.name, this.state.email, this.state.password))}>Register</button>
+                </Link>
+            </div>
             </form>
         </>;
     }

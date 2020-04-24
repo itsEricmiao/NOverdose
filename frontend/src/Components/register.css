@@ -1,3 +1,4 @@
+
 .imgcontainer {
     text-align: center;
     color: #3498DB;
@@ -44,6 +45,20 @@ img.avatar {
     width: 7%;
     border-radius: 50%;
     
+}
+
+.button{
+    border-radius: 10px;
+    justify-content: center;
+    background-color:  #3498DB;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 0.6;
+    transition: 0.3s;
+    text-decoration: none;
 }
 
 /* .registerB{

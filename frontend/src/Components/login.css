@@ -47,8 +47,7 @@ img.avatar {
     
 }
 
-.loginButton,
-.registerButton{
+.loginButton{
     border-radius: 10px;
     background-color:  #3498DB;
     border: none;
@@ -81,9 +80,6 @@ img.avatar {
     cursor: pointer;
 }
 
-.registerButton{
-    margin-left: 60px;
-}
 
 .error{
     color: red;
