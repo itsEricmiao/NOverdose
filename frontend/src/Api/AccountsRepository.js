@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { createHash } from 'crypto';
-
 export class AccountsRepository {
 
     url = 'http://localhost:8000'

@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ROUTES } from './routes';
-import MainPage from './Component/mainPage'
-import NavBar from './Component/navBar'
-import './Component/semantic-ui-css/semantic.min.css';
 import './App.css';
+import ProfilePage from './Component/profilePage'
+import MainPage from './Component/mainPage'
 
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
 
   render() {
     return (
       <>
-        <Router>
+        {/* <Router>
           <Switch>
             { ROUTES.map((route, index) => <Route key={index} { ...route } />) }
           </Switch>
-        </Router>
+        </Router> */}
+        <ProfilePage/>
       </>
     );
   }
