@@ -1,9 +1,12 @@
-import  Login from './Components/login.js';
-import RegisterPage from './Components/register.js';
-import MainPage from './Components/mainPage';
-import ProfilePage from './Components/profilePage'
+import Login from './Components/login';
+import RegisterPage from './Components/register';
+import MainPage  from './Components/mainPage';
+import Search from './Components/search';
+import ProfilePage from './Components/profilePage';
+
 export const ROUTES = [
-    { path: '/homePage', component: MainPage },
+    { path: '/search', component: Search },
+    { path: '/mainPage/:id', component: MainPage },
     { path: '/profile', component: ProfilePage},
     { path: '/register', component: RegisterPage },
     { path: '/', component: Login }

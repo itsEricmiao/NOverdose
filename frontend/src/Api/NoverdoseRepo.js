@@ -23,10 +23,22 @@ export class NoverdoseRepo {
         });
     }
 
-    addUser(user) {
-        console.log(user);
+    addUser(name, email, password) {
         return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/addUser`, user, this.config)
+            axios.post(`${this.url}/addUser`, {name: name, email: email, password: password}, this.config)
+                .then(x => {
+                    resolve(x.data);
+                })
+                .catch(x => {
+                    alert(x);
+                    reject(x);
+                });
+        });
+    }
+
+    getUserById(id) {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/users/${id}`, this.config)
                 .then(x => resolve(x.data))
                 .catch(x => {
                     alert(x);

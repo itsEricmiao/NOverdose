@@ -103,12 +103,16 @@ app.listen(config.port, config.host, (e) => {
 //API ROUTES
 
 
-app.get('/users/:uid', function (req, res) {
-   var uid = req.param('uid')
-	connection.query("SELECT * FROM users WHERE id = ?", uid, function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
-		res.send(result)
+app.get('/users/:id', function (req, res) {
+	connection.query("SELECT * FROM users WHERE id = ?", [req.params['id']], function (err, result, fields) {
+    if (err) 
+      console.log(err);
+    else
+    {
+      return res.status(200).json({
+        "user": result
+      })// Result in JSON format
+    }
 	});
 });
 
@@ -116,8 +120,10 @@ app.get('/users/:uid', function (req, res) {
 app.get('/drugs/:name', function (req, res) {
    var name = req.param('name')
 	connection.query("SELECT * FROM drugs d JOIN sideEffects se ON d.sideEffectId = se.sideEffectId WHERE d.name = ?", name, function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
+    if (err) 
+      throw err;
+    else
+		  res.end(JSON.stringify(result)); // Result in JSON format
 		//res.send(result)
 	});
 });
@@ -165,17 +171,28 @@ app.post('/createUser', (req, res) => {
 
 
 app.post("/addUser", function (req, res) {
-  res.status(200).send("User has been added!");
   let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
-  console.log(req.body);
   connection.query(query, (err, result) => {
     if(err) {
       console.log(err);
-      logger.error("failed adding a parent");
+      logger.error("failed adding a user");
       res.status(400);
     }
   })
+  var returnId;
+  query = "SELECT * FROM users WHERE NAME = '" + req.body.name + "' limit 1;"
+  connection.query(query, (err,rows,fields) => {
+    if(err){
+      res.status(400);
+    }
+    else{
+      returnId = rows[0].id;
+    }
+  res.status(200).json({
+    "id": returnId
+  })
 });
+}); 
 
 app.get("/users", function (req, res) {
   let query = "select * from users;";
@@ -197,6 +214,7 @@ app.get("/users", function (req, res) {
 });
 
 app.get("/login", function (req, res) {
+  var returnId;
     let email = req.query.email;
     let password = req.query.password;
     let query = "select * from users where email = '" + email + "' and password = '" + password + "' limit 1;";
@@ -208,10 +226,11 @@ app.get("/login", function (req, res) {
       }
       else{
         console.log('LOGGED IN');
-        res.status(200).json({
-          "data": rows[0]
-        })
+        returnId = rows[0].id;
       }
+      res.status(200).json({
+        "id": returnId
+      })
     })
 });
 
@@ -227,22 +246,6 @@ app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async 
 	var pharmacy = req.param('pharmacy');
 	
 	  connection.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [id, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
-		  if (err) throw err;
-		  res.end(JSON.stringify(result)); // Result in JSON format
-	  });
-  });
-
-// POST
-// /drug post
-app.post('/adddrug/:drugId/:name/:price/:description/:sideEffectId/:symptoms', async (req, res) => {
-	var drugId = req.param('drugId');
-	var name = req.param('name');
-	var price = req.param('price');
-	var description = req.param('description');
-	var sideEffectId = req.param('sideEffectId');
-	var symptoms = req.param('symptoms');
-	
-	  connection.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [drugId, name, price, description, sideEffectId, symptoms],function (err, result, fields) {
 		  if (err) throw err;
 		  res.end(JSON.stringify(result)); // Result in JSON format
 	  });
@@ -278,23 +281,6 @@ app.delete('/deleteaccount/:uid', async (req, res) => {
 	  });
   });
 
-//DELET ACCOUNT
-app.delete('/deletedrug/:drugId', async (req, res) => {
-	var drugId = req.param('drugId');
-
-	  connection.query("DELETE FROM perscriptions WHERE drugId = ?", drugId,function (err, result, fields) {
-		  if (err) 
-			  return console.error(error.message);
-		  res.end(JSON.stringify(result)); 
-		});
-
-	connection.query("DELETE FROM drugs WHERE drugId = ?", drugId,function (err, result, fields) {
-		if (err) 
-			return console.error(error.message);
-		res.end(JSON.stringify(result)); 
-	  });
-  });
-
 //DELETE Pharmacy
 app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 	var pharmacy = req.param('pharmacy');
@@ -310,8 +296,8 @@ app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 
 
 // GET persciptions
-app.get('/allperscriptions', function (req, res) {
-	connection.query("SELECT p.uid, d.name, p.cost, p.pharmacy FROM perscriptions INNER JOIN drugs d ON p.drugId = d.drugId GROUP BY uid", function (err, result, fields) {
+app.get('allperscriptions', function (req, res) {
+	connection.query("SELECT * FROM perscriptions GROUP BY uid", function (err, result, fields) {
     if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -329,10 +315,10 @@ app.get('/allperscriptions', function (req, res) {
 }); 
 
 // GET persciptions for pharmacy
-app.get('/perscriptionsforpharmacy/:pharmacy', function (req, res) {
+app.get('perscriptionsforpharmacy/:pharmacy', function (req, res) {
 	var pharmacy = req.param('pharmacy');
 	
-	connection.query("SELECT * FROM perscriptions where pharmacy LIKE %?% GROUP BY uid", pharmacy, function (err, result, fields) {
+	connection.query("SELECT * FROM perscriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
 		if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -352,7 +338,7 @@ app.get('/perscriptionsforpharmacy/:pharmacy', function (req, res) {
 // GET persciptions for user
 app.get('/usersperscriptions/:uid', function (req, res) {
 	var uid = req.param('uid');
-	connection.query("SELECT p.uid, d.name, p.cost, p.pharmacy FROM perscriptions p INNER JOIN drugs d ON p.drugId = d.drugId WHERE uid = ?", uid, function (err, result, fields) {
+	connection.query("SELECT * FROM perscriptions WHERE uid = ?", uid, function (err, result, fields) {
 		if(err){
       logger.error("No perscription");
       res.status(400).send(err);
@@ -389,7 +375,7 @@ app.get('/drugprices', function (req, res) {
 });
 
 //PUT change price of drug
-app.put('/changedrugcost/:drugId/:price', function (req, res) {
+app.put('changedrugcost/:drugId/:price', function (req, res) {
 	var drugId = req.param('drugId');
 	var price = req.param('price');
 	connection.query("UPDATE perscriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
@@ -419,45 +405,3 @@ app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 }); 
-
-
-// GET by Price for drugs in a specific range
-app.get('/priceinrange/:low/:high', function (req, res) {
-  var low = req.param('low')
-  var high = req.param('high')
-	connection.query("SELECT name, price FROM drugs ORDER BY price", [low, high], function (err, result, fields) {
-		if(err){
-      logger.error("No drugs");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
-    }
-    else{
-      res.status(200).json({
-        "Data": rows
-      });
-    }  
-	});
-});
-
-//Search Symptoms
-app.get('/searchsymptoms/:symptoms', function (req, res) {
-  var symptoms = req.param('symptoms')
-	connection.query("SELECT * FROM drugs WHERE symptoms LIKE %?% ORDER BY price", symptoms, function (err, result, fields) {
-		if(err){
-      logger.error("No drugs");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
-    }
-    else{
-      res.status(200).json({
-        "Data": rows
-      });
-    }  
-	});
-});

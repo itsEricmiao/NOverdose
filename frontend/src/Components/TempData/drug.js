@@ -1,4 +1,4 @@
-import {Drug} from '../../Models/drug';
+import {Drug} from '../../models/drug';
 var drugs = [
     new Drug(
       "001",
