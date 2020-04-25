@@ -143,7 +143,8 @@ app.post('/addDrug/:name/:desc/:effId', function (req, res) { //add new drug
 	});
 });
 
-  
+//TABLE CREATION ROUTES
+
 app.post('/createUser', (req, res) => {
   let query = "DROP TABLE if exists users";
   connection.query(query, (err, result) => 
@@ -168,6 +169,28 @@ app.post('/createUser', (req, res) => {
   })
   res.status(200).send('User table has been created!!');
 });
+
+app.post("/createDrugs", function(req,res) {
+
+	let query = "CREATE TABLE drugs(drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,sideEffectId int DEFAULT NULL,PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId));"
+
+
+	connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		res.status(200).send("Drugs table created succesfully")
+	});
+	
+	query = "ALTER TABLE drugs AUTO_INCREMENT = 3000;"
+	connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		res.status(200).send("Drugs table created succesfully")
+	});
+});
+		
 
 
 app.post("/addUser", function (req, res) {
