@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import './navBar.css';
 
 class NavBar extends React.Component{
@@ -27,11 +27,14 @@ class NavBar extends React.Component{
 						{this.state.logout  && <Redirect to="/login" /> }
 					</li>
 					<li>
-						<a href = "">Search</a>
+					<Link to={'/search'}>
+						<a href = "">Search </a>
+					</Link>
 					</li>
 					<li>
-					<a href = "" onClick = {this.goToProfile}>Profile </a>
-						{this.state.profile  && <Redirect to="/profile" /> }
+					<Link to={'/profile'}>
+						<a href = "">Profile </a>
+					</Link>
 					</li>
 					<li>
 						<a >Home</a>

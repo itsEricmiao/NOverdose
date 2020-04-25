@@ -1,9 +1,9 @@
 import React from 'react';
 import './register.css'
 import logo from './logo.png';
-import { Link } from 'react-router-dom';
-import User from './../Models/user';
-import { NoverdoseRepo } from './../API/NoverdoseRepo';
+import User from './../models/user';
+import { NoverdoseRepo } from './../Api/NoverdoseRepo';
+import { RegisterButton } from './loginButton';
 
 
 export class RegisterPage extends React.Component {
@@ -12,13 +12,24 @@ export class RegisterPage extends React.Component {
 
 
     state = {
+        id: '',
         name: '',
         email: '',
-        password: ''
+        password: '',
+        birthday: '',
+        medications: '',
+        profilePicUrl: '',
+        registered: null
     };
 
-    registerUser(user){
-        this.noverdoseRepo.addUser(user);
+    registerUser(name, email, password){
+        this.setState({registered: false});
+        this.noverdoseRepo.addUser(name, email, password)
+        .then(accountId => {new User(accountId, name, email, password, this.state.birthday, this.state.medications, this.state.profilePicUrl)
+            console.log(accountId);
+            this.setState({id: accountId.id}); 
+            this.setState({registered: true});
+        });
     }
 
     render() {
@@ -47,7 +58,7 @@ export class RegisterPage extends React.Component {
                         value={this.state.email}
                         onChange={ e => this.setState({ email: e.target.value }) } />
                 </div>
-
+                  
 
                 <div className="register-form">
                     <label htmlFor="email">Password</label>
@@ -58,13 +69,11 @@ export class RegisterPage extends React.Component {
                         value={this.state.password}
                         onChange={ e => this.setState({ password: e.target.value }) } />
                 </div>
-               
-            
-            <div class="text-center">
-            <Link to={'homePage'}>
-                    <button className = "button" onClick={() => this.registerUser(new User(this.state.name, this.state.email, this.state.password))}>Register</button>
-                </Link>
-            </div>
+
+                <div className="col-3">
+                    <button className = "button" type="button"  onClick={() => this.registerUser(this.state.name, this.state.email, this.state.password)}>Register</button>
+                    {this.state.registered && <RegisterButton id = {this.state.id}/>}
+                </div>
             </form>
         </>;
     }

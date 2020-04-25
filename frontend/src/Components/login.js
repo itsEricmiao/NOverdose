@@ -2,24 +2,29 @@ import React from 'react';
 import './login.css'
 import { Redirect, Link } from 'react-router-dom';
 import logo from './logo.png';
-import { NoverdoseRepo } from './../API/NoverdoseRepo';
+import { NoverdoseRepo } from './../Api/NoverdoseRepo';
 import {LoginButton, ErrorMessage} from './loginButton';
 
 
 class Login extends React.Component{
+
     noverdoseRepo = new NoverdoseRepo();
+
     onLogin() {
-        this.setState({authenticated: false});
+        this.setState({authenticated: false}); 
         this.noverdoseRepo.login(this.state.email, this.state.password).then(user => {
             this.setState({authenticated: true});
+            console.log(user);
+            this.setState({id: user.id});
         });
-
+    
       }
     registerUser = e => {
         this.setState({register: true});
     }
 
     state = {
+        id: '',
         email: "",
         password: "",
         authenticated: null
@@ -58,14 +63,14 @@ class Login extends React.Component{
                                         placeholder="password"
                                     />
             </form>
-            <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password}
+            <button className = "loginButton" type="button" disabled={!this.state.email || !this.state.password} 
             onClick={() => this.onLogin()}>Log In</button>
             <Link to={'register'}>
-            <button className="registerButton" type="button">Register</button>
+            <button className="button" type="button">Register</button>
             </Link>
 
 
-            {this.state.authenticated && <LoginButton/>}
+            {this.state.authenticated && <LoginButton id = {this.state.id}/>}
             </div>
             </>;
     }

@@ -1,4 +1,4 @@
-import {User} from '../../Models/user';
+import {User} from '../../models/user';
 var user = new User(
     "001",
     "John Smith",
