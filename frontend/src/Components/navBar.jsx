@@ -9,7 +9,8 @@ class NavBar extends React.Component{
 		this.state = {
 			id: '',
 			profile: false,
-			logout: false
+			logout: false,
+			search: false
 		};
 	}
 
@@ -19,6 +20,10 @@ class NavBar extends React.Component{
 
 	goToProfile = e => {
         this.setState({profile: true});
+	}
+
+	goToSearch = e => {
+		this.setState({search: true});
 	}
 	
 
@@ -35,16 +40,15 @@ class NavBar extends React.Component{
 						{this.state.logout  && <Redirect to="/login" /> }
 					</li>
 					<li>
-					<Link to={'/search'}>
-						<a href = "">Search </a>
-					</Link>
+						<a href="" onClick={this.goToSearch}>Search </a>
+						{this.state.search  && <Redirect to="/search" /> }
 					</li>
 					<li>
-							<a href="" onClick = {this.goToProfile}>Profile </a>
-							{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
+						<a href="" onClick = {this.goToProfile}>Profile </a>
+						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
-						<a >Home</a>
+						<a href="">Home</a>
 					</li>
 				</ul>
 			</nav>

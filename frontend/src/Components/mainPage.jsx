@@ -106,7 +106,7 @@ export default class MainPage extends React.Component {
                     </h2>
                 </div>
 
-                <div class="row text-align-center"
+                <div className="row text-align-center"
                     style={{
                         margin: "auto",
                         marginBottom: "20px"

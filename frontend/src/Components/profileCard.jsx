@@ -73,6 +73,7 @@ export default class ProfileCard extends React.Component{
                     backgroundColor: "#9EC0FE",
                     marginRight: "5px"
                   }}
+                  key={item}
                 >
                   {item}
                 </Tag>
