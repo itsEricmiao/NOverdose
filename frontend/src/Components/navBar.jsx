@@ -3,6 +3,16 @@ import { Redirect, Link } from 'react-router-dom';
 import './navBar.css';
 
 class NavBar extends React.Component{
+	constructor(props)
+	{
+		super(props);
+		this.state = {
+			id: '',
+			profile: false,
+			logout: false
+		};
+	}
+
 	logoutUser = e => {
         this.setState({logout: true});
 	}
@@ -10,9 +20,7 @@ class NavBar extends React.Component{
 	goToProfile = e => {
         this.setState({profile: true});
 	}
-
-	state = {
-    };
+	
 
 	render(){
 		return <>
@@ -32,9 +40,8 @@ class NavBar extends React.Component{
 					</Link>
 					</li>
 					<li>
-					<Link to={'/profile'}>
-						<a href = "">Profile </a>
-					</Link>
+							<a href="" onClick = {this.goToProfile}>Profile </a>
+							{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
 						<a >Home</a>

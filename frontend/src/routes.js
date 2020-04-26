@@ -7,7 +7,7 @@ import ProfilePage from './Components/profilePage';
 export const ROUTES = [
     { path: '/search', component: Search },
     { path: '/mainPage/:id', component: MainPage },
-    { path: '/profile', component: ProfilePage},
+    { path: '/profile/:id', component: ProfilePage},
     { path: '/register', component: RegisterPage },
     { path: '/', component: Login }
 ]

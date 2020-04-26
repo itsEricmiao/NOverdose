@@ -43,11 +43,12 @@ export default class MainPage extends React.Component {
         });
       }
 
-    componentDidMount() {
+    componentWillMount() {
         let id = +this.props.match.params.id;
         if (id) {
             this.repo.getUserById(id)
                 .then(curuser => {
+                    console.log("MAINPAGE componentWillMount");
                     console.log(JSON.stringify(curuser));
                     this.setState({
                         id: curuser.user[0].id,
@@ -58,6 +59,21 @@ export default class MainPage extends React.Component {
                 }
                 );
         }
+    }
+
+    //     componentWillMount(){
+    //     let id = +this.props.match.params.id;
+    //         if (id) {
+    //             this.repo.getUserById(id)
+    //                 .then(curuser => {
+    //                     this.setState({
+    //                         id: curuser.user[0].id,
+    //                     })
+    //                 }
+    //                 );
+    //         }
+            
+    // }
 
         // if (id) {
         //     this.repo.getPrescriptionByUserID(id)
@@ -69,29 +85,41 @@ export default class MainPage extends React.Component {
         //             console.error("Cannot get user prescription")
         //         );
         // }
-    }
     
     render() {
         var sampleUser = new User(this.state.id, this.state.name, this.state.email, this.state.password, this.state.birthday, this.state.medications, this.state.profilePicUrl);
         // console.log(JSON.stringify(sampleUser));
-
         var allDrugs = drugs;
         return (
             <>
-                <NavBar />
-            <br></br>
+                <NavBar id={this.props.match.params.id}/>              
                 <div className="DrugCard" style={{
                     fontFamily: "sans-serif",
                     textAlign: "center",
-                    background: "whitesmoke"
+                    background: "whitesmoke",
+                    marginBottom: "20px"
                 }}>
                     <ProfileCard user={sampleUser}
                         cardColor={"#9EC0FE"} />
-                <h1 style={{ textAlign: "center" }}>{this.state.name}'s Prescription</h1>
-                    <div className="allCards"
-                        style={{ "columns": "2" }}>
-                    {allDrugs.map((x, y) => <DrugCard key={y}  {...x} />)}
+                    <h2 style={{ textAlign: "center"}}>
+                        {this.state.name}'s Prescription
+                    </h2>
                 </div>
+
+                <div class="row text-align-center"
+                    style={{
+                        margin: "auto",
+                        marginBottom: "20px"
+                }}>
+                    <button className="btn btn-primary" style={{"margin":"auto"}}>Add New Prescription</button>
+                    <button className="btn btn-primary" style={{ "margin": "auto" }}>Delete Prescription</button>
+                </div>
+                
+                    <div className="allCards container col"
+                        style={{ columns: "2" }}>
+                        {
+                            allDrugs.map((x, y) => <DrugCard key={y}  {...x} />)
+                        }
                 </div>
                </>
         );
