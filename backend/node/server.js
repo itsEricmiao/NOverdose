@@ -257,7 +257,6 @@ app.get("/login", function (req, res) {
     })
 });
 
-
 // POST
 // /perscription post
 app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
@@ -377,25 +376,6 @@ app.get('/usersperscriptions/:uid', function (req, res) {
     }  
 	});
 }); 
-
-// GET by Price for drugs
-app.get('/drugprices', function (req, res) {
-	connection.query("SELECT name, price FROM drugs ORDER BY price", function (err, result, fields) {
-		if(err){
-      logger.error("No drugs");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
-    }
-    else{
-      res.status(200).json({
-        "Data": rows
-      });
-    }  
-	});
-});
 
 //PUT change price of drug
 app.put('changedrugcost/:drugId/:price', function (req, res) {
