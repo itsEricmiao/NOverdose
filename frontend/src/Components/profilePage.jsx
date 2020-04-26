@@ -1,17 +1,20 @@
 import React from 'react';
+import {NoverdoseRepo} from '../Api/NoverdoseRepo';
 import { Redirect } from 'react-router-dom';
 
 export default class ProfilePage extends React.Component {
+
+    repo = new NoverdoseRepo();
 
     constructor(props)
     {
         super(props)
         this.state = {
             id:'',
-            title: '',
             name: '',
             email: '',
             password: '',
+            birthday:'',
             homePage: false
         };
 
@@ -21,9 +24,24 @@ export default class ProfilePage extends React.Component {
         this.setState({homePage: true});
     }
 
-    componentDidMount() {
-        let newId = +this.props.match.params.id;
-        this.setState({ id:newId});
+
+
+    componentWillMount() {
+        let newid = +this.props.match.params.id;
+        if (newid) {
+            this.repo.getUserById(newid)
+                .then(curuser => {
+                    console.log("profilepage: componentWillMount");
+                    this.setState({
+                        id: curuser.user[0].id,
+                        name: curuser.user[0].name,
+                        email: curuser.user[0].email,
+                        password: curuser.user[0].password,
+                        id: newid
+                    })
+                }
+            );
+        }
     }
 
     render() {
@@ -60,6 +78,16 @@ export default class ProfilePage extends React.Component {
                             className="form-control"
                             value={this.state.birthday}
                             onChange={e => this.setState({ birthday: e.target.value })} />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="birthday">Password</label>
+                        <input type="text"
+                            id="password"
+                            name="password"
+                            className="form-control"
+                            value={this.state.password}
+                            onChange={e => this.setState({ password: e.target.value })} />
                     </div>
 
                     <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
