@@ -9,16 +9,9 @@ export class NoverdoseRepo {
     };
 
     login(email, password) {
-        console.log("login password", password);
-        let obj = {
-            email: email,
-            password: password
-        };
-        console.log("obj: ", obj);
-
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/login`, { params: {email: email, password: password}})
-            .then(resp => resolve(resp.data)/*handle receiving parent info*/)
+            .then(resp => resolve(resp.data))
             .catch(resp => alert(resp));
         });
     }
@@ -47,5 +40,257 @@ export class NoverdoseRepo {
         });
     }
     
-
+    search(name, disease, symptom, min, max) {
+        var where = "";
+        if(name == 'N/A' || name == 'n/a')
+        {
+            if(disease == "N/A")
+            {
+                if(symptom == 'N/A')
+                {
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        where = "WHERE price <= " + max;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + min;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        return new Promise((resolve, reject) => {
+                            where = "WHERE price Between" + min + " AND " + max;
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+                else
+                {
+                    where = "WHERE price <= " + max + " AND s.id =" + symptom; 
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + max + " AND s.id =" + symptom;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        where = "WHERE price BETWEEN " + max + " AND " + min + " AND s.id =" + symptom;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {max: max, min: min, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+            }
+            else
+            {
+                if(symptom == 'N/A')
+                {
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        where = "WHERE price <= " + max + " AND d.id = " + disease;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + min + " AND d.id = " + disease;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        return new Promise((resolve, reject) => {
+                            where = "WHERE price Between" + min + " AND " + max + " AND D.id = " + disease;
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+                else
+                {
+                    where = "WHERE price <= " + max + " AND s.id =" + symptom + " AND D.id = " + disease;
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + max + " AND s.id =" + symptom + " AND D.id = " + disease;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        where = "WHERE price BETWEEN " + max + " AND " + min + " AND s.id =" + symptom + " AND D.id = " + disease;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {max: max, min: min, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(disease == "N/A")
+            {
+                if(symptom == 'N/A')
+                {
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        where = "WHERE price <= " + max + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + min+ " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        return new Promise((resolve, reject) => {
+                            where = "WHERE price Between" + min + " AND " + max + " AND name = " + name;
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+                else
+                {
+                    where = "WHERE price <= " + max + " AND s.id =" + symptom + " AND name = " + name;
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + max + " AND s.id =" + symptom + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        where = "WHERE price BETWEEN " + max + " AND " + min + " AND s.id =" + symptom + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {max: max, min: min, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+            }
+            else
+            {
+                if(symptom == 'N/A')
+                {
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        where = "WHERE price <= " + max + " AND d.id = " + disease + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + min + " AND d.id = " + disease + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        return new Promise((resolve, reject) => {
+                            where = "WHERE price Between" + min + " AND " + max + " AND D.id = " + disease + " AND name = " + name;
+                            axios.get(`${this.url}/getDrugs`, {params: {where: where}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+                else
+                {
+                    where = "WHERE price <= " + max + " AND s.id =" + symptom + " AND D.id = " + disease + " AND name = " + name;
+                    if(min == 'N/A' || min == 'n/a')
+                    {
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else if(max == 'N/A' || max == 'n/a')
+                    {
+                        where = "WHERE price >= " + max + " AND s.id =" + symptom + " AND D.id = " + disease + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {price: max, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                    else{
+                        where = "WHERE price BETWEEN " + max + " AND " + min + " AND s.id =" + symptom + " AND D.id = " + disease + " AND name = " + name;
+                        return new Promise((resolve, reject) => {
+                            axios.get(`${this.url}/getDrugs`, {params: {max: max, min: min, symptom: symptom}})
+                            .then(resp => resolve(resp.data))
+                            .catch(resp => alert(resp));
+                        });
+                    }
+                }
+            }
+        }
+    }
 }
