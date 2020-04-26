@@ -4,8 +4,8 @@ import { Redirect } from 'react-router-dom';
 export default class ProfilePage extends React.Component {
 
     state = {
-        title: 'User',
-        name: 'John Smith',
+        title: '',
+        name: '',
         email: '',
         password: '',
     };

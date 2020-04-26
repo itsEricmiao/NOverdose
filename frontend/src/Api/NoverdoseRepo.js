@@ -39,6 +39,17 @@ export class NoverdoseRepo {
                 });
         });
     }
+
+    getPrescriptionByUserID(id) {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/usersperscriptions/${id}`, this.config)
+                .then(x => resolve(x.data))
+                .catch(x => {
+                    alert(x);
+                    reject(x);
+                });
+        });
+    }
     
     search(name, disease, symptom, min, max) {
         var where = "";
