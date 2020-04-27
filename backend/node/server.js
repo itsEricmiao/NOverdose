@@ -170,9 +170,23 @@ app.post('/createUser', (req, res) => {
   res.status(200).send('User table has been created!!');
 });
 
-app.post("/createDrugs", function(req,res) {
 
-	let query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL,PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId),CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId))";
+
+
+
+
+app.post("/createDrugs", function(req,res) {
+  let query = "DROP TABLE if exists drugs";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+
+	query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL,PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId),CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId))";
 
 
 	connection.query(query, function(err, result) {
@@ -190,12 +204,28 @@ app.post("/createDrugs", function(req,res) {
 	});
 });
 
+
+
+
+
+
 app.post("/createSideEffects", function(req,res) {
-	let query = "CREATE TABLE sideEffects (sideEffectId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (sideEffectId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("SE table created succesfully")}
+  let query = "DROP TABLE if exists sideEffects";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE sideEffects (sideEffectId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (sideEffectId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("SideEffect table created succesfully")}
+	});
 
   query = "ALTER TABLE sideEffects AUTO_INCREMENT = 4000;"
   connection.query(query, function(err, result) {
@@ -205,14 +235,45 @@ app.post("/createSideEffects", function(req,res) {
   });
 });
 
-app.post("/createSymptoms", function(req,res) {
-	let query = "CREATE TABLE symptoms (symptomId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (symptomId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("Symptoms table created succesfully")}
+app.post("/addSideEffect", function (req, res) {
+  let name = req.body.name;
+  let query = "insert into symptoms (symptomId, name) values(" + ` NULL, '${req.body.name}'`+ ")";
+  connection.query(query, (err, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a sideEfffect");
+      res.status(400);
+    }
+  })
+});
 
-  query = "ALTER TABLE sideEffects AUTO_INCREMENT = 5000;"
+
+
+
+
+
+
+
+
+app.post("/createSymptoms", function(req,res) {
+  let query = "DROP TABLE if exists symptoms";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE symptoms (symptomId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (symptomId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("Symptom table created succesfully")}
+	});
+
+  query = "ALTER TABLE symptoms AUTO_INCREMENT = 5000;"
   connection.query(query, function(err, result) {
     if (err) {
       console.log(err);
@@ -220,12 +281,29 @@ app.post("/createSymptoms", function(req,res) {
   });
 });
 
+
+
+
+
+
+
 app.post("/createDiseases", function(req,res) {
-	let query = "CREATE TABLE diseases (diseaseId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (diseaseId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("Diseases table created succesfully")}
+  let query = "DROP TABLE if exists diseases";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE diseases (diseaseId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (diseaseId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("Disease table created succesfully")}
+	});
 
   query = "ALTER TABLE diseases AUTO_INCREMENT = 6000;"
   connection.query(query, function(err, result) {
@@ -237,12 +315,13 @@ app.post("/createDiseases", function(req,res) {
 
 //SEARCH ROUTE
 
-app.get("/getDrugByCriteria/:whereClause", function(req, res) {
+app.get("/getDrugs", function(req, res) {
 
-  let whereClause = req.param("whereClause");
+  let whereClause = req.query.where;
+  console.log(whereClause);
 
-  let query = "SELECT d.name, d.description AS drugDesc, se.description AS sideEffectDesc, dis.description AS diseaseDesc, s.description AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
-  connection.query(query, whereClause, function (err, result, fields) {
+  let query = "SELECT d.name, d.description AS drugDesc, se.name AS sideEffectDesc, dis.name AS diseaseDesc, s.name AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
+  connection.query(query, function (err, result, fields) {
     if (err){
       throw err;
       console.log(err);

@@ -1,7 +1,7 @@
-export class sideEffect {
-    constructor(id, description){
+export class SideEffect {
+    constructor(id, name){
         this.id = id;
-        this.description = description;
+        this.name = name;
     }
 }
-export default sideEffect;
+export default SideEffect;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import NavBar from './navBar';
 
 export default class ProfilePage extends React.Component {
 
@@ -17,7 +18,7 @@ export default class ProfilePage extends React.Component {
     render() {
         return (
             <>
-
+                <NavBar/>
                 <form className="container">
                     <h1>{this.state.title} Profile</h1>
                     <div className="form-group">

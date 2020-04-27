@@ -1,8 +1,21 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import './navBar.css';
+import logo from './logo.png';
 
 class NavBar extends React.Component{
+	constructor(props)
+	{
+		super(props);
+		this.state = {
+			id: '',
+			profile: false,
+			logout: false,
+			search: false,
+			dash: false
+		};
+	}
+
 	logoutUser = e => {
         this.setState({logout: true});
 	}
@@ -10,9 +23,14 @@ class NavBar extends React.Component{
 	goToProfile = e => {
         this.setState({profile: true});
 	}
+	goToDash = e => {
+        this.setState({dash: true});
+	}
 
-	state = {
-    };
+	goToSearch = e => {
+		this.setState({search: true});
+	}
+	
 
 	render(){
 		return <>
@@ -20,24 +38,24 @@ class NavBar extends React.Component{
 			<nav>
 				<ul>
 					<li className = "Title">
-						NOverdose
+						NOverdose  
+						<img src={logo} alt="Avatar" class="avatar"></img>
 					</li>
 					<li>
 						<a href = "" onClick = {this.logoutUser}>Logout </a>
 						{this.state.logout  && <Redirect to="/login" /> }
 					</li>
 					<li>
-					<Link to={'/search'}>
-						<a href = "">Search </a>
-					</Link>
+						<a href="" onClick={this.goToSearch}>Search </a>
+						{this.state.search  && <Redirect to="/search" /> }
 					</li>
 					<li>
-					<Link to={'/profile'}>
-						<a href = "">Profile </a>
-					</Link>
+						<a href="" onClick = {this.goToProfile}>Profile </a>
+						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
-						<a >Home</a>
+						<a onClick = {this.goToDash} href="">Home</a>
+						{this.state.dash  &&<Redirect to={'/mainPage/' + this.props.id}></Redirect>}
 					</li>
 				</ul>
 			</nav>
@@ -45,5 +63,4 @@ class NavBar extends React.Component{
 		</>
 	}
 }
-
 export default NavBar;
