@@ -55,7 +55,7 @@ class NavBar extends React.Component{
 					</li>
 					<li>
 						<a onClick = {this.goToDash} href="">Home</a>
-						{this.state.dash  &&<Redirect to={'/mainPage/' + this.props.id}></Redirect>}
+						{this.state.dash &&<Redirect to={'/dashboard/' + this.props.id}></Redirect>}
 					</li>
 				</ul>
 			</nav>

@@ -1,20 +1,38 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { button } from 'bootstrap';
+import NavBar from "./navBar";
 
 export default class DrugForm extends React.Component {
 
     state = {
+        id: "",
         name: "",
         price: "",
         description: "",
         pharmacy: "",
-        sideEffect:""
+        sideEffect:"",
+    }
+
+    goHome = e => {
+        this.setState({homePage: true});
+    }
+
+    componentWillMount() {
+        console.log(JSON.stringify(this.props.location.state))
+        let newID = this.props.location.state.id;
+        this.setState({id: newID});
+        console.log("componentWillMount")
+        console.log("id = "+newID);
     }
 
 
     render() {
         return (
-            <div className="card mt-4">
+            <>
+                <NavBar/>
+                <div className="container">
+                <div className="mt-4">
                 <div className="card-header bg-secondary text-white">
                     <h3>Add Prescription </h3>
                 </div>
@@ -116,14 +134,17 @@ export default class DrugForm extends React.Component {
 
                     <div className="row">
                         <div className="col">
-                            <button className="btn-primary">Back</button>{" "}
+                            <button className="btn-primary btn-lg" onClick={this.goHome}>Back</button>
+                            {this.state.homePage && <Redirect to={"/dashboard/"+ this.state.id}/>}
                         </div>
                         <div className="col">
-                            <button className="btn-primary">Submit</button>{" "}
+                            <button className="btn-primary btn-lg">Submit</button>{" "}
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
+                </div>
+            </>
         );
     }
 }

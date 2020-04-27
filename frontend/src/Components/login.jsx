@@ -69,7 +69,7 @@ class Login extends React.Component{
                 </div>
             <button className = "btn btn-primary btn-lg btn-block" type="button" 
             onClick={() => this.onLogin()}>Log In</button>
-            {this.state.authenticated && <Redirect to={'/mainPage/' + this.state.id}/>}
+            {this.state.authenticated && <Redirect to={'/dashboard/' + this.state.id}/>}
             <br></br>
             <Link to={'register'}>
             <button className="btn btn-primary btn-lg btn-block" type="button">Register</button>

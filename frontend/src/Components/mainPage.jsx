@@ -21,7 +21,8 @@ export default class MainPage extends React.Component {
             password: '',
             birthday: '1995-01-01',
             medications: [ "MEDICATIONS1", "MEDICATIONS2", "MEDICATIONS3"],
-            profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg'
+            profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
+            addPrescription: false
         };
     }
 
@@ -45,12 +46,12 @@ export default class MainPage extends React.Component {
     }
 
     componentWillMount() {
+        console.log("Dashboard componentWillMount");
+        console.log(+this.props.match.params.id)
         let id = +this.props.match.params.id;
         if (id) {
             this.repo.getUserById(id)
                 .then(curuser => {
-                        console.log("MAINPAGE componentWillMount");
-                        console.log(JSON.stringify(curuser));
                         this.setState({
                             id: curuser.user[0].id,
                             name: curuser.user[0].name,
@@ -63,8 +64,28 @@ export default class MainPage extends React.Component {
     }
 
 
-    delete(name) {
+    delete=()=> {
 
+    }
+
+    setPrescriptionRedirect = () => {
+        this.setState({
+            addPrescription: true
+        })
+    }
+
+
+    renderPrescriptionRedirect = () => {
+        if (this.state.addPrescription) {
+            return <Redirect
+                to={{
+                    pathname:'/prescription',
+                    state: {
+                    id: this.state.id
+                }
+                }}
+            />
+        }
     }
 
     render() {
@@ -86,22 +107,17 @@ export default class MainPage extends React.Component {
                         {this.state.name}'s Prescription
                     </h2>
                 </div>
-
-                <div className="row text-align-center"
-                     style={{
-                         margin: "auto",
-                         marginBottom: "20px"
-                     }}>
-                    <button className="btn btn-primary" style={{ "margin": "auto" }} onClick={() => { }}>Add New Prescription</button>
+                <div className="text-center">
+                    {this.renderPrescriptionRedirect()}
+                    <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
                 </div>
-
-                <div className="allCards container col"
+                <div className="allCards col"
                      style={{ columns: "2" }}>
                     {
                         allDrugs.map((x, y) =>
                             <div className="row">
                                 <DrugCard key={y}  {...x} />
-                                <button className="btn btn-primary" style={{ "margin": "auto" }} onClick={() => { this.delete(x.name) }}>Delete Prescription</button>
+                                <button className="btn btn-secondary btn-lg disabled" style={{ "margin": "auto" }} onClick={this.delete(x.name)}>Delete Prescription</button>
                             </div>
                         )
                     }

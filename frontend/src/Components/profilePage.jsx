@@ -5,8 +5,8 @@ import NavBar from './navBar';
 export default class ProfilePage extends React.Component {
 
     state = {
-        title: 'User',
-        name: 'John Smith',
+        title: '',
+        name: '',
         email: '',
         password: '',
     };
@@ -14,6 +14,12 @@ export default class ProfilePage extends React.Component {
     goHome = e => {
         this.setState({homePage: true});
     }
+
+    componentWillMount() {
+        let id = +this.props.match.params.id;
+        this.setState({id: id});
+    }
+
 
     render() {
         return (
@@ -42,9 +48,10 @@ export default class ProfilePage extends React.Component {
                     </div>
 
                     <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
-                    {this.state.homePage && <Redirect to="/homePage" />}
+                    {this.state.homePage && <Redirect to={"/dashboard/"+this.state.id} />}
                     <button className="btn btn-primary btn-block">Save</button>
                 </form>
+
             </>
         );
     }
