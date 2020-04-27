@@ -154,7 +154,11 @@ app.post('/createUser', (req, res) => {
     else{
       }
   });
+<<<<<<< Updated upstream
   query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+=======
+  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), 'birthday' DATE, PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+>>>>>>> Stashed changes
   connection.query(query, (err, result) => {
     if(err) { 
       console.log("Errpr creaing parent user", err);
@@ -171,7 +175,11 @@ app.post('/createUser', (req, res) => {
 
 
 app.post("/addUser", function (req, res) {
+<<<<<<< Updated upstream
   let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
+=======
+  let query = "insert into users (id, name, email, password, birthday) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}' , '${req.body.birthday}'`+ ")";
+>>>>>>> Stashed changes
   connection.query(query, (err, result) => {
     if(err) {
       console.log(err);
@@ -194,6 +202,20 @@ app.post("/addUser", function (req, res) {
 });
 }); 
 
+<<<<<<< Updated upstream
+=======
+// PUT change cost of perscription
+app.put('/changeuserinfo/:uid/:email/:', function (req, res) {
+	var uid = req.param('uid');
+	var drugId = req.param('drugId')
+	var cost = req.param('cost');
+	connection.query("UPDATE prescriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+
+>>>>>>> Stashed changes
 app.get("/users", function (req, res) {
   let query = "select * from users;";
   connection.query(query, function(err,rows, fields) {
@@ -277,7 +299,11 @@ app.post('/createDisease', (req, res) => {
       console.log("Errpr creaing parent diseases", err);
       res.redirect('/'); }
   })
+<<<<<<< Updated upstream
   query = "ALTER TABLE diseases AUTO_INCREMENT = 2000;";
+=======
+  query = "ALTER TABLE diseases AUTO_INCREMENT = 6000;";
+>>>>>>> Stashed changes
   connection.query(query, (err, result) => {
     if(err) { 
       console.log(err);
@@ -507,7 +533,11 @@ app.put('changedrugcost/:drugId/:price', function (req, res) {
 // PUT change cost of perscription
 app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
 	var uid = req.param('uid');
+<<<<<<< Updated upstream
 	var drugId = req.param('drugId')
+=======
+	var drugId = req.param('drugId');
+>>>>>>> Stashed changes
 	var cost = req.param('cost');
 	connection.query("UPDATE prescriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
 		if (err) throw err;
@@ -517,7 +547,11 @@ app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
 
 // PUT changes side effect
 app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
+<<<<<<< Updated upstream
 	var drugId = req.param('drugId')
+=======
+	var drugId = req.param('drugId');
+>>>>>>> Stashed changes
 	var sideEffectId = req.param('sideEffectId');
 
 	connection.query("UPDATE perscriptions SET sideEffectId = ? WHERE drugId = ?", [sideEffectId, drugId], function (err, result, fields) {
@@ -525,3 +559,18 @@ app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 }); 
+<<<<<<< Updated upstream
+=======
+
+// PUT changes user info
+app.put('/changeuserinfo/:id/:name/:email/:password/:birthday', function (req, res) {
+	var id = req.param('id')
+	var name = req.param('name');
+  var email = req.param('email')
+	var password = req.param('password');
+	connection.query("UPDATE users SET name = ?, email = ?, password = ?, birthday = ? WHERE id = ?", [name, email, password, id], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+>>>>>>> Stashed changes
