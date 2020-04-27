@@ -72,13 +72,15 @@ export default class MainPage extends React.Component {
     renderUserPrescriptions=()=>{
        return(
            this.state.allDrugs.map((x, y) =>
-            <div className="row">
+               <div className="row">
                 <DrugCard key={y} {...x} />
-                <button className="btn btn-secondary btn-lg disabled"
-                        style={{ "margin": "auto" }}
-                        onClick={()=>this.delete(x.name)}>
-                    Delete Prescription
-                </button>
+
+                    <button className="btn btn-secondary btn-lg disabled "
+                            style={{ margin: "auto" }}
+                            onClick={()=>this.delete(x.name)}>
+                        Delete Prescription
+                    </button>
+
             </div>
         )
         );
@@ -128,18 +130,34 @@ export default class MainPage extends React.Component {
                 }}>
                     <ProfileCard user={sampleUser}
                                  cardColor={"#9EC0FE"} />
-                    <h2 style={{ textAlign: "center"}}>
-                        {this.state.name}'s Prescription
-                    </h2>
+                    {/*<h2 style={{ textAlign: "center"}}>*/}
+                    {/*    {this.state.name}'s Prescription*/}
+                    {/*</h2>*/}
                 </div>
-                <div className="text-center">
-                    {this.renderPrescriptionRedirect()}
-                    <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
+                <div className={"container"}>
+                    <div className="text-center">
+                        {this.renderPrescriptionRedirect()}
+                        <h1 className={"display-6"}>Past Prescription</h1>
+                        <p>Past Prescription goes here</p>
+
+                        <ul className="list-group list-group-horizontal">
+                            <li className="list-group-item">Past Prescription 1</li>
+                            <li className="list-group-item">Past Prescription 2</li>
+                            <li className="list-group-item">Past Prescription 3</li>
+                        </ul>
+                    </div>
+
+                    <div className={"container text-center"}>
+                        <h1 className={"display-6"}>Current Prescription</h1>
+                        <br></br>
+                        <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
+                    </div>
+                    <div className="col"
+                         style={{ columns: "1" }}>
+                        {this.renderUserPrescriptions()}
+                    </div>
                 </div>
-                <div className="col"
-                     style={{ columns: "2" }}>
-                    {this.renderUserPrescriptions()}
-                </div>
+
             </>
         );
     }
