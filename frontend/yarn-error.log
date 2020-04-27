@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, copyfile '/usr/local/share/.cache/yarn/v6/npm-resolve-1.17.0-b25941b54968231cc2d1bb76a79cb7f2c0bf8444-integrity/node_modules/resolve/lib/caller.js' -> '/usr/src/app/node_modules/resolve/lib/caller.js'
+  Error: ENOENT: no such file or directory, copyfile '/usr/local/share/.cache/yarn/v6/npm-less-3.11.1-c6bf08e39e02404fe6b307a3dfffafdc55bd36e2-integrity/node_modules/less/packages/less/node_modules/chevrotain/README.md' -> '/usr/src/app/node_modules/less/packages/less/node_modules/chevrotain/README.md'
 
 npm manifest: 
   {
