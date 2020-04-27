@@ -105,7 +105,7 @@ app.listen(config.port, config.host, (e) => {
 
 app.get('/users/:id', function (req, res) {
 	connection.query("SELECT * FROM users WHERE id = ?", [req.params['id']], function (err, result, fields) {
-    if (err) 
+    if (err)
       console.log(err);
     else
     {
@@ -120,7 +120,7 @@ app.get('/users/:id', function (req, res) {
 app.get('/drugs/:name', function (req, res) {
    var name = req.param('name')
 	connection.query("SELECT * FROM drugs d JOIN sideEffects se ON d.sideEffectId = se.sideEffectId WHERE d.name = ?", name, function (err, result, fields) {
-    if (err) 
+    if (err)
       throw err;
     else
 		  res.end(JSON.stringify(result)); // Result in JSON format
@@ -133,7 +133,7 @@ app.post('/addDrug/:name/:desc/:effId', function (req, res) { //add new drug
 	var name = req.param("name");
 	var desc = req.param("desc");
 	var effId = req.param("effId");
-	
+
 	connection.query("INSERT INTO drugs VALUES(null,?,?,?)",
 	[name,desc,effId],
 	function(err, result, fields) {
@@ -143,10 +143,11 @@ app.post('/addDrug/:name/:desc/:effId', function (req, res) { //add new drug
 	});
 });
 
-  
+//TABLE CREATION ROUTES
+
 app.post('/createUser', (req, res) => {
   let query = "DROP TABLE if exists users";
-  connection.query(query, (err, result) => 
+  connection.query(query, (err, result) =>
   {
     if(err) {
       console.log(err);
@@ -154,44 +155,38 @@ app.post('/createUser', (req, res) => {
     else{
       }
   });
-  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), 'birthday' DATE, PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
   connection.query(query, (err, result) => {
-    if(err) { 
+    if(err) {
       console.log("Errpr creaing parent user", err);
       res.redirect('/'); }
   })
   query = "ALTER TABLE users AUTO_INCREMENT = 1000;";
   connection.query(query, (err, result) => {
-    if(err) { 
+    if(err) {
       console.log(err);
       res.status(400);}
   })
   res.status(200).send('User table has been created!!');
 });
 
-//Create Prescription Table
-app.post('/createPrescription', function(req, res) {
-  let query = "CREATE TABLE `prescriptions` (`preId` INT NOT NULL AUTO_INCREMENT, `uid` INT, `drugId` INT,  `directions` VARCHAR(500), `cost` INT, PRIMARY KEY (`preId`), UNIQUE INDEX `preId_UNIQUE` (`preId` ASC), CONSTRAINT `drugId` FOREIGN KEY (`drugId`) REFERENCES `drugs`.`drugId` ('drugId')); ";
-  connection.query(query, function(err, result) {
-    if(err) { 
-      console.log("Error creaing parent prescription", err);
-    }
-    else{
-      res.status(200).send("prescription table created succesfully")
-    }
 
-  })
-  query = "ALTER TABLE prescriptions AUTO_INCREMENT = 2000;";
-  connection.query(query, (err, result) => {
-    if(err) { 
-      console.log(err);
-    }
-  });
-})
+
+
+
 
 app.post("/createDrugs", function(req,res) {
+  let query = "DROP TABLE if exists drugs";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
 
-	let query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL,PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId),CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId))";
+	query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL,PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId),CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId))";
 
 
 	connection.query(query, function(err, result) {
@@ -209,12 +204,28 @@ app.post("/createDrugs", function(req,res) {
 	});
 });
 
+
+
+
+
+
 app.post("/createSideEffects", function(req,res) {
-	let query = "CREATE TABLE sideEffects (sideEffectId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (sideEffectId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("SE table created succesfully")}
+  let query = "DROP TABLE if exists sideEffects";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE sideEffects (sideEffectId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (sideEffectId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("SideEffect table created succesfully")}
+	});
 
   query = "ALTER TABLE sideEffects AUTO_INCREMENT = 4000;"
   connection.query(query, function(err, result) {
@@ -224,14 +235,45 @@ app.post("/createSideEffects", function(req,res) {
   });
 });
 
-app.post("/createSymptoms", function(req,res) {
-	let query = "CREATE TABLE symptoms (symptomId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (symptomId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("Symptoms table created succesfully")}
+app.post("/addSideEffect", function (req, res) {
+  let name = req.body.name;
+  let query = "insert into symptoms (symptomId, name) values(" + ` NULL, '${req.body.name}'`+ ")";
+  connection.query(query, (err, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a sideEfffect");
+      res.status(400);
+    }
+  })
+});
 
-  query = "ALTER TABLE sideEffects AUTO_INCREMENT = 5000;"
+
+
+
+
+
+
+
+
+app.post("/createSymptoms", function(req,res) {
+  let query = "DROP TABLE if exists symptoms";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE symptoms (symptomId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (symptomId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("Symptom table created succesfully")}
+	});
+
+  query = "ALTER TABLE symptoms AUTO_INCREMENT = 5000;"
   connection.query(query, function(err, result) {
     if (err) {
       console.log(err);
@@ -239,12 +281,29 @@ app.post("/createSymptoms", function(req,res) {
   });
 });
 
+
+
+
+
+
+
 app.post("/createDiseases", function(req,res) {
-	let query = "CREATE TABLE diseases (diseaseId int NOT NULL AUTO_INCREMENT,description varchar(45) DEFAULT NULL,PRIMARY KEY (diseaseId))";
-  if (err) {
-    console.log(err);
-  }
-  else {res.status(200).send("Diseases table created succesfully")}
+  let query = "DROP TABLE if exists diseases";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
+	query = "CREATE TABLE diseases (diseaseId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,PRIMARY KEY (diseaseId))";
+  connection.query(query, function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		else {res.status(200).send("Disease table created succesfully")}
+	});
 
   query = "ALTER TABLE diseases AUTO_INCREMENT = 6000;"
   connection.query(query, function(err, result) {
@@ -256,12 +315,13 @@ app.post("/createDiseases", function(req,res) {
 
 //SEARCH ROUTE
 
-app.get("/getDrugByCriteria/:whereClause", function(req, res) {
+app.get("/getDrugs", function(req, res) {
 
-  let whereClause = req.param("whereClause");
+  let whereClause = req.query.where;
+  console.log(whereClause);
 
-  let query = "SELECT d.name, d.description AS drugDesc, se.description AS sideEffectDesc, dis.description AS diseaseDesc, s.description AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
-  connection.query(query, whereClause, function (err, result, fields) {
+  let query = "SELECT d.name, d.description AS drugDesc, se.name AS sideEffectDesc, dis.name AS diseaseDesc, s.name AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
+  connection.query(query, function (err, result, fields) {
     if (err){
       throw err;
       console.log(err);
@@ -274,7 +334,7 @@ app.get("/getDrugByCriteria/:whereClause", function(req, res) {
 });
 
 app.post("/addUser", function (req, res) {
-  let query = "insert into users (id, name, email, password, birthday) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}' , '${req.body.birthday}'`+ ")";
+  let query = "insert into users (id, name, email, password) values(" + ` NULL, '${req.body.name}', '${req.body.email}', '${req.body.password}'`+ ")";
   connection.query(query, (err, result) => {
     if(err) {
       console.log(err);
@@ -295,17 +355,6 @@ app.post("/addUser", function (req, res) {
     "id": returnId
   })
 });
-}); 
-
-// PUT change cost of perscription
-app.put('/changeuserinfo/:uid/:email/:', function (req, res) {
-	var uid = req.param('uid');
-	var drugId = req.param('drugId')
-	var cost = req.param('cost');
-	connection.query("UPDATE prescriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
-	});
 });
 
 app.get("/users", function (req, res) {
@@ -323,7 +372,7 @@ app.get("/users", function (req, res) {
         res.status(200).json({
           "Data": rows
         });
-      }  
+      }
   })
 });
 
@@ -348,86 +397,17 @@ app.get("/login", function (req, res) {
     })
 });
 
-
-//Get disease,
-app.get('diseasebyid/:diseaseId', function (req, res) {
-  var diseaseId = req.param('diseaseId')
-
-	connection.query("SELECT * FROM diseases WHERE diseaseId = ?", diseaseId, function (err, result, fields) {
-    if(err){
-      logger.error("No disease");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
-    }
-    else{
-      res.status(200).json({
-        "Data": rows
-      });
-    }  
-	});
-});
-
-//Get all disease,
-app.get('alldiseasebyid', function (req, res) {
-
-	connection.query("SELECT * FROM diseases", diseaseId, function (err, result, fields) {
-    if(err){
-      logger.error("No disease");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
-    }
-    else{
-      res.status(200).json({
-        "Data": rows
-      });
-    }  
-	});
-});
-
-//add disease
-app.post("/adddisease", function (req, res) {
-  let query = "insert into disease (id, name) values(" + ` NULL, '${req.body.name}'`+ ")";
-  connection.query(query, (err, result) => {
-    if(err) {
-      console.log(err);
-      logger.error("failed adding a user");
-      res.status(400);
-    }
-  })
-  var returnId;
-  query = "SELECT * FROM users WHERE NAME = '" + req.body.name + "' limit 1;"
-  connection.query(query, (err,rows,fields) => {
-    if(err){
-      res.status(400);
-    }
-    else{
-      returnId = rows[0].id;
-    }
-  res.status(200).json({
-    "id": returnId
-  })
-});
-}); 
-
-
-
 // POST
 // /perscription post
-app.post('/addprescription/:preId/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
-	var preId = req.param('preId');
+app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
+	var id = req.param('id');
 	var uid = req.param('uid');
 	var drugId = req.param('drugId');
 	var directions = req.param('directions');
 	var cost = req.param('cost');
 	var pharmacy = req.param('pharmacy');
-	
-	  connection.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [preId, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
+
+	  connection.query("INSERT INTO perscriptions VALUES (?, ?, ?, ?, ?, ?)", [id, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
 		  if (err) throw err;
 		  res.end(JSON.stringify(result)); // Result in JSON format
 	  });
@@ -438,11 +418,11 @@ app.post('/addprescription/:preId/:uid/:drugId/:directions/:cost/:pharmacy', asy
 app.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
 	var uid = req.param('uid');
 	var drugid = req.param('drugid');
-	
+
 	  connection.query("DELETE FROM perscriptions WHERE uid = ? AND drugid = ?", [uid, drugid] ,function (err, result, fields) {
-		  if (err) 
+		  if (err)
 			  return console.error(error.message);
-		  res.end(JSON.stringify(result)); 
+		  res.end(JSON.stringify(result));
 		});
   });
 
@@ -450,16 +430,16 @@ app.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
 app.delete('/deleteaccount/:uid', async (req, res) => {
 	var uid = req.param('uid');
 
-	  connection.query("DELETE FROM prescriptions WHERE uid = ?", uid,function (err, result, fields) {
-		  if (err) 
+	  connection.query("DELETE FROM perscriptions WHERE uid = ?", uid,function (err, result, fields) {
+		  if (err)
 			  return console.error(error.message);
-		  res.end(JSON.stringify(result)); 
+		  res.end(JSON.stringify(result));
 		});
 
 	connection.query("DELETE FROM users WHERE uid = ?", uid,function (err, result, fields) {
-		if (err) 
+		if (err)
 			return console.error(error.message);
-		res.end(JSON.stringify(result)); 
+		res.end(JSON.stringify(result));
 	  });
   });
 
@@ -467,21 +447,21 @@ app.delete('/deleteaccount/:uid', async (req, res) => {
 app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 	var pharmacy = req.param('pharmacy');
 
-	  connection.query("DELETE FROM prescriptions WHERE pharmacy = ?", pharmacy,function (err, result, fields) {
-		  if (err) 
+	  connection.query("DELETE FROM perscriptions WHERE pharmacy = ?", pharmacy,function (err, result, fields) {
+		  if (err)
 			  return console.error(error.message);
-		  res.end(JSON.stringify(result)); 
+		  res.end(JSON.stringify(result));
 		});
 
-	
+
   });
 
 
 // GET persciptions
-app.get('allprescriptions', function (req, res) {
-	connection.query("SELECT * FROM prescriptions GROUP BY uid", function (err, result, fields) {
+app.get('allperscriptions', function (req, res) {
+	connection.query("SELECT * FROM perscriptions GROUP BY uid", function (err, result, fields) {
     if(err){
-      logger.error("No prescription");
+      logger.error("No perscription");
       res.status(400).send(err);
       res.status(400).json({
         "data": [],
@@ -492,17 +472,17 @@ app.get('allprescriptions', function (req, res) {
       res.status(200).json({
         "Data": rows
       });
-    }  
+    }
 	});
-}); 
+});
 
 // GET persciptions for pharmacy
-app.get('prescriptionsforpharmacy/:pharmacy', function (req, res) {
+app.get('perscriptionsforpharmacy/:pharmacy', function (req, res) {
 	var pharmacy = req.param('pharmacy');
-	
-	connection.query("SELECT * FROM prescriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
+
+	connection.query("SELECT * FROM perscriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
 		if(err){
-      logger.error("No prescription");
+      logger.error("No perscription");
       res.status(400).send(err);
       res.status(400).json({
         "data": [],
@@ -513,16 +493,16 @@ app.get('prescriptionsforpharmacy/:pharmacy', function (req, res) {
       res.status(200).json({
         "Data": rows
       });
-    }  
+    }
 	});
-}); 
+});
 
 // GET persciptions for user
-app.get('/usersprescriptions/:uid', function (req, res) {
+app.get('/usersperscriptions/:uid', function (req, res) {
 	var uid = req.param('uid');
-	connection.query("SELECT * FROM prescriptions WHERE uid = ?", uid, function (err, result, fields) {
+	connection.query("SELECT * FROM perscriptions WHERE uid = ?", uid, function (err, result, fields) {
 		if(err){
-      logger.error("No prescription");
+      logger.error("No perscription");
       res.status(400).send(err);
       res.status(400).json({
         "data": [],
@@ -533,9 +513,9 @@ app.get('/usersprescriptions/:uid', function (req, res) {
       res.status(200).json({
         "Data": rows
       });
-    }  
+    }
 	});
-}); 
+});
 
 // GET by Price for drugs
 app.get('/drugprices', function (req, res) {
@@ -552,7 +532,7 @@ app.get('/drugprices', function (req, res) {
       res.status(200).json({
         "Data": rows
       });
-    }  
+    }
 	});
 });
 
@@ -560,41 +540,29 @@ app.get('/drugprices', function (req, res) {
 app.put('changedrugcost/:drugId/:price', function (req, res) {
 	var drugId = req.param('drugId');
 	var price = req.param('price');
-	connection.query("UPDATE prescriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
+	connection.query("UPDATE perscriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
 });
 
 // PUT change cost of perscription
-app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
+app.put('/changeperscriptioncost/:uid/:drugId/:cost', function (req, res) {
 	var uid = req.param('uid');
-	var drugId = req.param('drugId');
+	var drugId = req.param('drugId')
 	var cost = req.param('cost');
-	connection.query("UPDATE prescriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
+	connection.query("UPDATE perscriptions SET cost = ? WHERE uid = ? AND drugId = ?", [uid, cost, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
-}); 
+});
 
 // PUT changes side effect
 app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
-	var drugId = req.param('drugId');
+	var drugId = req.param('drugId')
 	var sideEffectId = req.param('sideEffectId');
 
 	connection.query("UPDATE perscriptions SET sideEffectId = ? WHERE drugId = ?", [sideEffectId, drugId], function (err, result, fields) {
-		if (err) throw err;
-		res.end(JSON.stringify(result)); // Result in JSON format
-	});
-}); 
-
-// PUT changes user info
-app.put('/changeuserinfo/:id/:name/:email/:password/:birthday', function (req, res) {
-	var id = req.param('id')
-	var name = req.param('name');
-  var email = req.param('email')
-	var password = req.param('password');
-	connection.query("UPDATE users SET name = ?, email = ?, password = ?, birthday = ? WHERE id = ?", [name, email, password, id], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});

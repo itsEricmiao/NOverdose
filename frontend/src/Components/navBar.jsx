@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import './navBar.css';
+import logo from './logo.png';
 
 class NavBar extends React.Component{
 	constructor(props)
@@ -10,7 +11,8 @@ class NavBar extends React.Component{
 			id: '',
 			profile: false,
 			logout: false,
-			search: false
+			search: false,
+			dash: false
 		};
 	}
 
@@ -20,6 +22,9 @@ class NavBar extends React.Component{
 
 	goToProfile = e => {
         this.setState({profile: true});
+	}
+	goToDash = e => {
+        this.setState({dash: true});
 	}
 
 	goToSearch = e => {
@@ -33,7 +38,8 @@ class NavBar extends React.Component{
 			<nav>
 				<ul>
 					<li className = "Title">
-						NOverdose
+						NOverdose  
+						<img src={logo} alt="Avatar" class="avatar"></img>
 					</li>
 					<li>
 						<a href = "" onClick = {this.logoutUser}>Logout </a>
@@ -48,7 +54,8 @@ class NavBar extends React.Component{
 						{this.state.profile  &&<Redirect to={'/profile/' + this.props.id}></Redirect>}
 					</li>
 					<li>
-						<a href="">Home</a>
+						<a onClick = {this.goToDash} href="">Home</a>
+						{this.state.dash  &&<Redirect to={'/mainPage/' + this.props.id}></Redirect>}
 					</li>
 				</ul>
 			</nav>
@@ -56,5 +63,4 @@ class NavBar extends React.Component{
 		</>
 	}
 }
-
 export default NavBar;

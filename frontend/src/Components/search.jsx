@@ -1,7 +1,10 @@
 import React from "react";
 import { SYMPTOMS } from "../constants";
 import { DISEASE } from "../constants";
+import { SIDEEFFECT } from "../constants";
 import { NoverdoseRepo } from '../Api/NoverdoseRepo';
+import NavBar from './navBar';
+import './search.css';
 
 export class Search extends React.Component{
 
@@ -13,19 +16,23 @@ export class Search extends React.Component{
         symptom: '',
         minPrice: '',
         maxPrice: '',
+        sideEffect: '',
         drugs: []
     }
 
-    search(name, disease, symptom, min, max){
-            this.noverdoseRepo.search(name, disease, symptom, min, max).then(returnDrugs => {
-                console.log(returnDrugs.Data);
-                this.setState({drugs: returnDrugs.Data});
+    search(name, disease, symptom, min, max, sideEffect)
+    {
+            name = '"' + name + '"';
+            this.noverdoseRepo.search(name, disease, symptom, min, max, sideEffect).then(returnDrugs => {
+                console.log(returnDrugs);
+                this.setState({drugs: returnDrugs});
             });
     }
 
   render() {
     return (
       <>
+      <NavBar/>
         <div className = "container">
         <div className="card mt-3 mb-3">
             <div className="card-body">
@@ -66,6 +73,19 @@ export class Search extends React.Component{
                     }
                 </select>
                 </div>
+                <div className="form-group">
+                <label htmlFor="search_departmentId">Side Effects<span className="text-danger">*</span></label>
+                <select id="search_departmentId"
+                        name="search_departmentId"
+                        className="form-control"
+                        value={ this.state.sideEffect }
+                        onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
+                    <option></option>
+                    {
+                        SIDEEFFECT.map((d, i) =><option key={ i } value={ d.id }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
                 <div className="row">
                                 <div className="col-5">
                                     <br></br>
@@ -87,7 +107,7 @@ export class Search extends React.Component{
                                 </div>
                             </div>
                 <div className="mt-2">
-                    <button type="button" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice)}>
+                    <button type="button" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect)}>
                         Search
                     </button>
                 </div>
@@ -99,8 +119,9 @@ export class Search extends React.Component{
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Description</th>
-                        <th>Pharmacy</th>
+                        <th>Symptom</th>
+                        <th>Disease</th>
+                        <th>Side Effect</th>
                         <th className = "text-right">Price</th>
                     </tr>
                 </thead>
@@ -109,8 +130,9 @@ export class Search extends React.Component{
                         this.state.drugs.map((p, i) =>
                                 <tr key = {i}>
                                     <td key = {i}>{ p.name }</td>
-                                    <td key = {i}>{ p.description }</td>
-                                    <td key = {i}>{ p.pharmacy }</td>
+                                    <td key = {i}>{ p.symptomDesc }</td>
+                                    <td key = {i}>{ p.diseaseDesc }</td>
+                                    <td key = {i}>{ p.sideEffectDesc }</td>
                                     <td key = {i} className = "text-right">${ p.price }</td>
                                 </tr>
                         )
