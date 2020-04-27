@@ -2,14 +2,12 @@ import React from 'react';
 import ProfileCard from "./profileCard";
 import DrugCard from "./drugCard";
 import NavBar from './navBar';
-import DrugForm from './newDrugPage'
 import drugs from './TempData/drug';
 import { NoverdoseRepo } from '../Api/NoverdoseRepo';
 import { Redirect} from 'react-router-dom';
 import User from '../models/user';
 
 export default class MainPage extends React.Component {
-
     repo = new NoverdoseRepo();
     constructor(props) {
         super(props)
@@ -22,7 +20,8 @@ export default class MainPage extends React.Component {
             birthday: '1995-01-01',
             medications: [ "MEDICATIONS1", "MEDICATIONS2", "MEDICATIONS3"],
             profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
-            addPrescription: false
+            addPrescription: false,
+            allDrugs: drugs
         };
     }
 
@@ -46,8 +45,6 @@ export default class MainPage extends React.Component {
     }
 
     componentWillMount() {
-        console.log("Dashboard componentWillMount");
-        console.log(+this.props.match.params.id)
         let id = +this.props.match.params.id;
         if (id) {
             this.repo.getUserById(id)
@@ -64,9 +61,29 @@ export default class MainPage extends React.Component {
     }
 
 
-    delete=()=> {
-
+    delete=(name)=> {
+        console.log("deleting["+name+"]");
+        let newDrugList = this.state.allDrugs.filter(function( obj ) {
+            return obj.name !== name;
+        });
+        this.setState({allDrugs:newDrugList});
     }
+
+    renderUserPrescriptions=()=>{
+       return(
+           this.state.allDrugs.map((x, y) =>
+            <div className="row">
+                <DrugCard key={y} {...x} />
+                <button className="btn btn-secondary btn-lg disabled"
+                        style={{ "margin": "auto" }}
+                        onClick={()=>this.delete(x.name)}>
+                    Delete Prescription
+                </button>
+            </div>
+        )
+        );
+    }
+
 
     setPrescriptionRedirect = () => {
         this.setState({
@@ -89,9 +106,17 @@ export default class MainPage extends React.Component {
     }
 
     render() {
-        var sampleUser = new User(this.state.id, this.state.name, this.state.email, this.state.password, this.state.birthday, this.state.medications, this.state.profilePicUrl);
-        // console.log(JSON.stringify(sampleUser));
-        var allDrugs = drugs;
+        var sampleUser = new User
+                                (
+                                    this.state.id,
+                                    this.state.name,
+                                    this.state.email,
+                                    this.state.password,
+                                    this.state.birthday,
+                                    this.state.medications,
+                                    this.state.profilePicUrl
+                                );
+
         return (
             <>
                 <NavBar id={this.props.match.params.id}/>
@@ -111,16 +136,9 @@ export default class MainPage extends React.Component {
                     {this.renderPrescriptionRedirect()}
                     <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
                 </div>
-                <div className="allCards col"
+                <div className="col"
                      style={{ columns: "2" }}>
-                    {
-                        allDrugs.map((x, y) =>
-                            <div className="row">
-                                <DrugCard key={y}  {...x} />
-                                <button className="btn btn-secondary btn-lg disabled" style={{ "margin": "auto" }} onClick={this.delete(x.name)}>Delete Prescription</button>
-                            </div>
-                        )
-                    }
+                    {this.renderUserPrescriptions()}
                 </div>
             </>
         );

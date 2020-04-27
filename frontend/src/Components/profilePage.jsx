@@ -37,8 +37,7 @@ export default class ProfilePage extends React.Component {
                             id: curuser.user[0].id,
                             name: curuser.user[0].name,
                             email: curuser.user[0].email,
-                            password: curuser.user[0].password,
-                            id: newid
+                            password: curuser.user[0].password
                         })
                     }
                 );
@@ -49,7 +48,6 @@ export default class ProfilePage extends React.Component {
         return (
             <>
                 <NavBar/>
-
                 <form className="container">
                     <h1>{this.state.title} Profile</h1>
                     <div className="form-group">
@@ -93,7 +91,7 @@ export default class ProfilePage extends React.Component {
                     </div>
 
                     <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
-                    {this.state.homePage && <Redirect to={"/dashboard/" + this.state.id}/>}
+                        {this.state.homePage && <Redirect to={"/dashboard/" + this.state.id}/>}
                     <button className="btn btn-primary btn-block">Save</button>
                 </form>
             </>

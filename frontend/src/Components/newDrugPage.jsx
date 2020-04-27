@@ -134,11 +134,11 @@ export default class DrugForm extends React.Component {
 
                     <div className="row">
                         <div className="col">
-                            <button className="btn-primary btn-lg" onClick={this.goHome}>Back</button>
+                            <button className="btn btn-secondary btn-lg disabled" onClick={this.goHome}>Back</button>
                             {this.state.homePage && <Redirect to={"/dashboard/"+ this.state.id}/>}
                         </div>
                         <div className="col">
-                            <button className="btn-primary btn-lg">Submit</button>{" "}
+                            <button className="btn btn-primary btn-lg">Submit</button>{" "}
                         </div>
                     </div>
                 </div>
