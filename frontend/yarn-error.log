@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, copyfile '/usr/local/share/.cache/yarn/v6/npm-@babel-plugin-syntax-nullish-coalescing-operator-7.8.3-167ed70368886081f74b5c36c65a88c03b66d1a9-integrity/node_modules/@babel/plugin-syntax-nullish-coalescing-operator/README.md' -> '/usr/src/app/node_modules/@babel/plugin-syntax-nullish-coalescing-operator/README.md'
+  Error: ENOENT: no such file or directory, copyfile '/usr/local/share/.cache/yarn/v6/npm-resolve-1.17.0-b25941b54968231cc2d1bb76a79cb7f2c0bf8444-integrity/node_modules/resolve/lib/caller.js' -> '/usr/src/app/node_modules/resolve/lib/caller.js'
 
 npm manifest: 
   {
