@@ -30,7 +30,7 @@ export default class DrugForm extends React.Component {
     render() {
         return (
             <>
-                <NavBar/>
+                <NavBar id={this.props.match.params.id}/>
                 <div className="container">
                 <div className="mt-4">
                 <div className="card-header bg-secondary text-white">

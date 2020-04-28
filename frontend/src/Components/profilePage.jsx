@@ -47,7 +47,7 @@ export default class ProfilePage extends React.Component {
     render() {
         return (
             <>
-                <NavBar/>
+                <NavBar id={this.props.match.params.id}/>
                 <form className="container">
                     <h1>{this.state.title} Profile</h1>
                     <div className="form-group">

@@ -11,13 +11,16 @@ export class Search extends React.Component{
     noverdoseRepo = new NoverdoseRepo();
 
     state = {
+        id:'',
+        added: null,
         name: '',
         disease: '',
         symptom: '',
         minPrice: '',
         maxPrice: '',
         sideEffect: '',
-        drugs: []
+        drugs: [],
+        drugName: ''
     }
 
     search(name, disease, symptom, min, max, sideEffect)
@@ -29,10 +32,26 @@ export class Search extends React.Component{
             });
     }
 
+    addPerscription(drugId, name)
+    {
+        console.log(drugId);
+        var returnValue = this.noverdoseRepo.addPerscription(drugId, this.props.match.params.id);
+            console.log(returnValue);
+            if(returnValue == "perscriptionAdded")
+            {
+                this.setState({added: true});
+            }
+            else
+            {
+                this.setState({added: true});
+                this.setState({drugName: name});
+            }
+    }
+
   render() {
     return (
       <>
-      <NavBar/>
+      <NavBar id={this.props.match.params.id}/>
         <div className = "container">
         <div className="card mt-3 mb-3">
             <div className="card-body">
@@ -115,6 +134,9 @@ export class Search extends React.Component{
         </div>
 
         <br></br>
+            {this.state.added == true && <h1 className = "text-center text-success">Perscription Sent to the Pharmacy!</h1>}
+            {this.state.added == false && <h1 className = "text-center text-danger">Perscription Has Already Been Sent!</h1>}
+            <br></br>
             <table className="table table-striped table-condensed">
                 <thead>
                     <tr>
@@ -123,6 +145,7 @@ export class Search extends React.Component{
                         <th>Disease</th>
                         <th>Side Effect</th>
                         <th className = "text-right">Price</th>
+                        <th className = "text-right">Add Perscription</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,6 +157,9 @@ export class Search extends React.Component{
                                     <td key = {i}>{ p.diseaseDesc }</td>
                                     <td key = {i}>{ p.sideEffectDesc }</td>
                                     <td key = {i} className = "text-right">${ p.price }</td>
+                                    <td key = {i}>
+                                        <button className = "btn btn-success float-right" onClick = {() => this.addPerscription(p.drugId, p.name)}>+</button>
+                                    </td>
                                 </tr>
                         )
                     }

@@ -40,18 +40,47 @@ export class NoverdoseRepo {
         });
     }
 
-    addSideEffect(name) {
-        console.log(name);
-        return new Promise((resolve, reject) => {
-            axios.post(`${this.url}/addSideEffect`, {name: name}, this.config)
+    addPerscription(drugId,userId) {
+        var checkIfInDb = 0;
+        var returnValue = 0;
+        console.log('here');
+        new Promise((resolve, reject) => {
+            axios.get(`${this.url}/searchPerscription`, {params: {drugId: drugId, userId: userId}}, this.config)
                 .then(x => {
-                    console.log("SYmptomAdded");
+                    console.log(x.data.data);
+                    if(x.data.data == "1")
+                    {
+                        console.log('here');
+                        checkIfInDb = 1;
+                    }
+                    else
+                    {
+                        return new Promise((resolve, reject) => {
+                            axios.post(`${this.url}/addPerscription`, {drugId: drugId, userId: userId}, this.config)
+                                .then(x => {
+                                    console.log("perscriptionAdded");
+                                    returnValue = 1;
+                                })
+                                .catch(x => {
+                                    alert(x);
+                                    reject(x);
+                                });
+                        });
+                    }
                 })
                 .catch(x => {
                     alert(x);
                     reject(x);
                 });
         });
+        if(checkIfInDb == 1)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
     }
     
     search(name, disease, symptom, min, max, sideEffect) {

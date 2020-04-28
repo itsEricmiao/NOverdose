@@ -47,7 +47,7 @@ class NavBar extends React.Component{
 					</li>
 					<li>
 						<a href="" onClick={this.goToSearch}>Search </a>
-						{this.state.search  && <Redirect to="/search" /> }
+						{this.state.search  && <Redirect to={'/search/' + this.props.id}/> }
 					</li>
 					<li>
 						<a href="" onClick = {this.goToProfile}>Profile </a>

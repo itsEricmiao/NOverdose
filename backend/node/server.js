@@ -320,7 +320,7 @@ app.get("/getDrugs", function(req, res) {
   let whereClause = req.query.where;
   console.log(whereClause);
 
-  let query = "SELECT d.name, d.description AS drugDesc, se.name AS sideEffectDesc, dis.name AS diseaseDesc, s.name AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
+  let query = "SELECT d.drugId, d.name, d.description AS drugDesc, se.name AS sideEffectDesc, dis.name AS diseaseDesc, s.name AS symptomDesc, d.price from drugs d INNER JOIN sideEffects se on d.sideEffectID = se.sideEffectId INNER JOIN diseases dis on d.diseaseId = dis.diseaseId INNER JOIN symptoms s on d.symptomId = s.symptomId " + whereClause;
   connection.query(query, function (err, result, fields) {
     if (err){
       throw err;
@@ -355,6 +355,48 @@ app.post("/addUser", function (req, res) {
     "id": returnId
   })
 });
+});
+
+app.post("/addPerscription", function (req, res) {
+  let query = "insert into perscriptions (perscriptionId, userId, drugId, oldPerscription) values(" + ` NULL, '${req.body.userId}', '${req.body.drugId}'`+ ", 0)";
+  connection.query(query, (err, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a perscription");
+      res.status(400);
+    }
+    var i = 5;
+    res.status(200).json({
+      "data" : i
+    })
+  })
+});
+
+app.get("/searchPerscription", function (req, res) {
+  let query = "SELECT *  from perscriptions where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
+  console.log(query);
+  connection.query(query, (err,rows, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed adding a perscription");
+      res.status(400);
+    }
+    var i = 0;
+    if(rows[0] == undefined)
+    {
+      res.status(200).json({
+        "data" : i
+      })
+    }
+    else
+    {
+      i = i + 1;
+      res.status(200).json({
+        "data" : i
+      })
+    }
+    
+  })
 });
 
 app.get("/users", function (req, res) {
