@@ -155,7 +155,7 @@ app.post('/createUser', (req, res) => {
     else{
       }
   });
-  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC)); ";
+  query = "CREATE TABLE `users` (`id` INT NOT NULL AUTO_INCREMENT,`name` VARCHAR(100),  `email` VARCHAR(50), `password` VARCHAR(500), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC), specialist tinyint, dob DATE); ";
   connection.query(query, (err, result) => {
     if(err) {
       console.log("Errpr creaing parent user", err);
@@ -395,7 +395,7 @@ app.get("/searchPerscription", function (req, res) {
         "data" : i
       })
     }
-    
+
   })
 });
 
@@ -439,6 +439,31 @@ app.get("/login", function (req, res) {
     })
 });
 
+app.put("/updateUser/:id/:name/:email/:password/:specialist/:dob", function (req, res) {
+
+  var id = req.param("id");
+  var name = req.param("name");
+  var email = req.param("email");
+  var password = req.param("password");
+  var specialist = req.param("specialist");
+  var dob = req.param("dob");
+
+  connection.query("UPDATE users SET name = ?, email = ?, password = ?, specialist = ?, dob = ? WHERE id = ?",
+  [name, email, password, specialist, dob, id],
+  function (err, result, fields) {
+
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    else
+      res.end(JSON.stringify(result));
+
+  });
+
+
+});
+
 // POST
 // /perscription post
 app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
@@ -455,6 +480,18 @@ app.post('/addperscription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async 
 	  });
   });
 
+app.post("/createPrescriptions", function (req, res) {
+
+  connection.query("create table db.perscriptions(`perscriptionId` INT NOT NULL AUTO_INCREMENT, userId int default NULL, drugId int default null, oldPerscription tinyint, primary key (perscriptionId), key fk_perscriptions_1_idx (drugId), key fk_perscriptions_2_idx (userId), constraint fk_perscription_1 foreign key (drugId) references db.drugs (drugId), constraint fk_perscription_2 foreign key (userId) references db.users (id))",
+    function(err, result, fields) {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+      res.end(JSON.stringify(result));
+    });
+
+})
 
 //DELETE perscription for user
 app.delete('/deleteperscription/:uid/:drugId', async (req, res) => {
