@@ -235,7 +235,7 @@ app.post("/createSideEffects", function(req,res) {
   });
 });
 
-app.post("/getSymptoms", function (req, res) {
+app.get("/getSymptoms", function (req, res) {
   let query = "Select * from symptoms";
   connection.query(query, (err, rows, feild) => {
     if(err) {
