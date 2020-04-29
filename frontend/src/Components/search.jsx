@@ -5,6 +5,7 @@ import { SIDEEFFECT } from "../constants";
 import { NoverdoseRepo } from '../Api/NoverdoseRepo';
 import NavBar from './navBar';
 import './search.css';
+import Symptom from "../models/symptom";
 
 export class Search extends React.Component{
 
@@ -20,6 +21,9 @@ export class Search extends React.Component{
         maxPrice: '',
         sideEffect: '',
         drugs: [],
+        symptoms: [],
+        sideEffects:[],
+        diseases:[],
         drugName: ''
     }
 
@@ -88,7 +92,7 @@ export class Search extends React.Component{
                         onChange={ e => this.setState( { symptom: e.target.value } ) }>
                     <option></option>
                     {
-                        SYMPTOMS.map((d, i) => <option key={ i } value={ d.id }>{ d.name }</option>)
+                        this.state.symptoms.map((d, i) => <option key={ i } value={ d.symptomId }>{ d.name }</option>)
                     }
                 </select>
                 </div>
@@ -101,7 +105,7 @@ export class Search extends React.Component{
                         onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
                     <option></option>
                     {
-                        SIDEEFFECT.map((d, i) =><option key={ i } value={ d.id }>{ d.name }</option>)
+                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.symptomId }>{ d.name }</option>)
                     }
                 </select>
                 </div>
@@ -172,7 +176,8 @@ export class Search extends React.Component{
   componentDidMount()
   {
       this.noverdoseRepo.symptoms().then(symptom => {
-        console.log(symptom);
+          console.log(symptom.data);
+          this.setState({symptoms: symptom.data, sideEffects: symptom.data})
     });
   }
 }

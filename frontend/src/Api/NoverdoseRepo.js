@@ -115,17 +115,17 @@ export class NoverdoseRepo {
     
     search(name, disease, symptom, min, max, sideEffect) {
         var where = "";
-        if(sideEffect == 1)
+        if(sideEffect == 1 || sideEffect == undefined)
         {
-            if(name == '"N/A"' || name == '"n/a"')
+            if(name == '"N/A"' || name == '"n/a"' || name == undefined)
             {
-                if(disease == 1)
+                if(disease == 1 || disease == undefined)
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "";
                                 return new Promise((resolve, reject) => {
@@ -144,7 +144,7 @@ export class NoverdoseRepo {
                                 });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min;
                             return new Promise((resolve, reject) => {
@@ -164,9 +164,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom; 
                             return new Promise((resolve, reject) => {
@@ -185,7 +185,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom;
                             return new Promise((resolve, reject) => {
@@ -206,11 +206,11 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE dis.diseaseId = " + disease;
                             return new Promise((resolve, reject) => {
@@ -229,7 +229,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min + " AND dis.diseaseId = " + disease;
                             return new Promise((resolve, reject) => {
@@ -249,9 +249,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND disdiseaseId = " + disease;
                                 return new Promise((resolve, reject) => {
@@ -270,7 +270,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND dis.diseaseId = " + disease;
                             return new Promise((resolve, reject) => {
@@ -292,13 +292,13 @@ export class NoverdoseRepo {
             }
             else
             {
-                if(disease == 1)
+                if(disease == 1 || disease == undefined)
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 console.log('here');
                                 where = "WHERE d.name = " + name;
@@ -318,7 +318,7 @@ export class NoverdoseRepo {
                                 });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min+ " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -338,9 +338,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -359,7 +359,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -380,11 +380,11 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE dis.diseaseId = " + disease + " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -403,7 +403,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min + " AND dis.diseaseId = " + disease + " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -423,9 +423,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND d.name = " + name;
                                 return new Promise((resolve, reject) => {
@@ -444,7 +444,7 @@ export class NoverdoseRepo {
                                 });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND d.name = " + name;
                             return new Promise((resolve, reject) => {
@@ -467,15 +467,15 @@ export class NoverdoseRepo {
         }
         else
         {
-            if(name == '"N/A"' || name == '"n/a"')
+            if(name == '"N/A"' || name == '"n/a"' || name == undefined)
             {
-                if(disease == 1)
+                if(disease == 1 || disease == undefined)
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE se.sideEffectId = " + sideEffect; 
                             return new Promise((resolve, reject) => {
@@ -494,7 +494,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min+ " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -514,9 +514,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND se.sideEffectId = " + sideEffect; 
                             return new Promise((resolve, reject) => {
@@ -535,7 +535,7 @@ export class NoverdoseRepo {
                                 });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -556,11 +556,11 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE dis.diseaseId = " + disease + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -579,7 +579,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min + " AND dis.diseaseId = " + disease + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -599,9 +599,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -620,7 +620,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -642,13 +642,13 @@ export class NoverdoseRepo {
             }
             else
             {
-                if(disease == 1)
+                if(disease == 1 || disease == undefined)
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -667,7 +667,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min+ " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -687,9 +687,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -708,7 +708,7 @@ export class NoverdoseRepo {
                                 });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -729,11 +729,11 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1)
+                    if(symptom == 1 || symptom == undefined)
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE dis.diseaseId = " + disease + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -752,7 +752,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + min + " AND dis.diseaseId = " + disease + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -772,9 +772,9 @@ export class NoverdoseRepo {
                     }
                     else
                     {
-                        if(min == 'N/A' || min == 'n/a')
+                        if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
-                            if(max == 'N/A' || max == 'n/a')
+                            if(max == 'N/A' || max == 'n/a' || max == undefined)
                             {
                                 where = "WHERE s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
@@ -793,7 +793,7 @@ export class NoverdoseRepo {
                             });
                             }
                         }
-                        else if(max == 'N/A' || max == 'n/a')
+                        else if(max == 'N/A' || max == 'n/a' || max == undefined)
                         {
                             where = "WHERE d.price >= " + max + " AND s.symptomId =" + symptom + " AND dis.diseaseId = " + disease + " AND d.name = " + name + " AND se.sideEffectId = " + sideEffect;
                             return new Promise((resolve, reject) => {
