@@ -22,28 +22,11 @@ export default class MainPage extends React.Component {
             specialist: 'Special',
             profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
             addPrescription: false,
-            allDrugs: drugs
+            allDrugs: drugs,
+            pastPrescriptions: []
         };
     }
 
-
-    getUser(id) {
-        console.log("GETTING USER")
-        let t = this.repo.getUserById(id);
-        console.log(t);
-        console.log(JSON.stringify(t))
-    }
-
-    onDrugAdded(newDrugs) {
-        this.setState(previousState => {
-            let index = previousState.product.medications.indexOf(newDrugs)
-            if (index !== -1) {
-                return previousState;
-            }
-            previousState.product.medications.push(newDrugs);
-            return previousState;
-        });
-    }
 
     componentWillMount() {
         let id = +this.props.match.params.id;
@@ -77,6 +60,8 @@ export default class MainPage extends React.Component {
 
     delete=(name)=> {
         console.log("deleting["+name+"]");
+        let list = this.state.pastPrescriptions.concat(name);
+        this.setState({pastPrescriptions: list})
         let newDrugList = this.state.allDrugs.filter(function( obj ) {
             return obj.name !== name;
         });
@@ -121,7 +106,7 @@ export default class MainPage extends React.Component {
         }
     }
 
-    render() {
+    createUser = () => {
         var sampleUser = new User
         (
             this.state.id,
@@ -132,6 +117,11 @@ export default class MainPage extends React.Component {
             this.state.specialist,
             this.state.profilePicUrl
         );
+        return sampleUser
+    }
+
+    render() {
+
 
         return (
             <>
@@ -142,22 +132,16 @@ export default class MainPage extends React.Component {
                     background: "whitesmoke",
                     marginBottom: "20px"
                 }}>
-                    <ProfileCard user={sampleUser}
+                    <ProfileCard user={this.createUser()}
                                  cardColor={"#9EC0FE"} />
-                    {/*<h2 style={{ textAlign: "center"}}>*/}
-                    {/*    {this.state.name}'s Prescription*/}
-                    {/*</h2>*/}
                 </div>
                 <div className={"container"}>
                     <div className="text-center">
                         {this.renderPrescriptionRedirect()}
                         <h1 className={"display-6"}>Past Prescription</h1>
                         <p>Past Prescription goes here</p>
-
                         <ul className="list-group list-group-horizontal">
-                            <li className="list-group-item">Past Prescription 1</li>
-                            <li className="list-group-item">Past Prescription 2</li>
-                            <li className="list-group-item">Past Prescription 3</li>
+                            {this.state.pastPrescriptions.map((item,i) => <li className="list-group-item list-group-item-light" key={i}>{item}</li>)}
                         </ul>
                     </div>
 

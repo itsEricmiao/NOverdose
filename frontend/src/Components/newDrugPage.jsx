@@ -19,11 +19,8 @@ export default class DrugForm extends React.Component {
     }
 
     componentWillMount() {
-        console.log(JSON.stringify(this.props.location.state))
         let newID = this.props.location.state.id;
         this.setState({id: newID});
-        console.log("componentWillMount")
-        console.log("id = "+newID);
     }
 
 
