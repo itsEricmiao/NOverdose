@@ -94,15 +94,37 @@ export default class MainPage extends React.Component {
 
 
     renderPrescriptionRedirect = () => {
+        let newPath = '/prescription/' + this.state.id;
         if (this.state.addPrescription) {
             return <Redirect
                 to={{
-                    pathname:'/prescription',
+                    pathname: newPath,
                     state: {
                         id: this.state.id
                     }
                 }}
             />
+        }
+    }
+
+    ifShowMessage = () =>{
+        if (this.state.pastPrescriptions == ''){
+            return (<p>You don't have any past prescription</p>)
+        }else{
+            let num = this.state.pastPrescriptions.length
+            return (<p>Here are {num} past prescriptions you had </p>)
+        }
+    }
+
+
+    showButtonBasedOnSpecialist=()=>{
+        console.log(this.state.specialist);
+        if (this.state.specialist == "Medical Specialist"){
+            return (<button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Search Prescription</button>
+            )
+        }else{
+            return (<button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
+            )
         }
     }
 
@@ -139,7 +161,7 @@ export default class MainPage extends React.Component {
                     <div className="text-center">
                         {this.renderPrescriptionRedirect()}
                         <h1 className={"display-6"}>Past Prescription</h1>
-                        <p>Past Prescription goes here</p>
+                        {this.ifShowMessage()}
                         <ul className="list-group list-group-horizontal">
                             {this.state.pastPrescriptions.map((item,i) => <li className="list-group-item list-group-item-light" key={i}>{item}</li>)}
                         </ul>
@@ -148,7 +170,7 @@ export default class MainPage extends React.Component {
                     <div className={"container text-center"}>
                         <h1 className={"display-6"}>Current Prescription</h1>
                         <br></br>
-                        <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
+                        {this.showButtonBasedOnSpecialist()}
                     </div>
                     <div className="col"
                          style={{ columns: "1" }}>
