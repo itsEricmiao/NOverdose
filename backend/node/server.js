@@ -46,20 +46,6 @@ app.get('/', (req, res) => {
 });
 
 
-//POST /reset
-app.post('/reset', (req, res) => {
-  connection.query('drop table if exists test_table', function (err, rows, fields) {
-    if (err)
-      logger.error("Can't drop table");
-  });
-  connection.query('CREATE TABLE `db`.`test_table` (`id` INT NOT NULL AUTO_INCREMENT, `value` VARCHAR(45), PRIMARY KEY (`id`), UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);', function (err, rows, fields) {
-    if (err)
-      logger.error("Problem creating the table test_table");
-  });
-  res.status(200).send('created the table');
-});
-
-
 //connecting the express object to listen on a particular port as defined in the config object.
 app.listen(config.port, config.host, (e) => {
   if (e) {
@@ -461,22 +447,6 @@ app.put("/updateUser", function (req, res) {
 
 
 });
-
-// POST
-// /prescription post
-app.post('/addprescription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async (req, res) => {
-	var id = req.param('id');
-	var uid = req.param('uid');
-	var drugId = req.param('drugId');
-	var directions = req.param('directions');
-	var cost = req.param('cost');
-	var pharmacy = req.param('pharmacy');
-
-	  connection.query("INSERT INTO prescriptions VALUES (?, ?, ?, ?, ?, ?)", [id, uid, drugId, directions, cost, pharmacy],function (err, result, fields) {
-		  if (err) throw err;
-		  res.end(JSON.stringify(result)); // Result in JSON format
-	  });
-  });
 
 
 //DELETE prescription for user
