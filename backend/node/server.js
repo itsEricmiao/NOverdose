@@ -171,7 +171,33 @@ app.post('/createUser', (req, res) => {
 });
 
 
+app.post("/createPrescriptions", function (req, res) {
+  let query = "DROP TABLE if exists prescriptions";
+  connection.query(query, (err, result) =>
+  {
+    if(err) {
+      console.log(err);
+    }
+    else{
+      }
+  });
 
+  connection.query("create table db.prescriptions(`prescriptionId` INT NOT NULL AUTO_INCREMENT, userId int default NULL, drugId int default null, oldPrescription tinyint, primary key (prescriptionId), key fk_prescriptions_1_idx (drugId), key fk_prescriptions_2_idx (userId), constraint fk_prescription_1 foreign key (drugId) references db.drugs (drugId), constraint fk_prescription_2 foreign key (userId) references db.users (id))",
+    function(err, result, fields) {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+      res.end(JSON.stringify(result));
+    });
+
+    query = "ALTER TABLE prescriptions AUTO_INCREMENT = 2000;"
+    connection.query(query, function(err, result) {
+      if (err) {
+        console.log(err);
+      }
+    });
+})
 
 
 
@@ -377,7 +403,11 @@ app.post("/addPrescription", function (req, res) {
 });
 
 app.get("/searchPrescription", function (req, res) {
-  let query = "SELECT *  from prescriptions where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
+  let query = "SELECT p.perscriptionID, p.oldPerscription, d.name, d.description AS DrugDescription,"
+  query += " di.description AS DiseaseDescription, s.description AS SymptomDescription, se.description AS SideEffectDescription"
+  query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
+  query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
+  query += " d.sideEffectId = se.sideEffectId where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
   console.log(query);
   connection.query(query, (err,rows, result) => {
     if(err) {
@@ -479,25 +509,13 @@ app.post('/addprescription/:id/:uid/:drugId/:directions/:cost/:pharmacy', async 
 	  });
   });
 
-app.post("/createPrescriptions", function (req, res) {
-
-  connection.query("create table db.prescriptions(`prescriptionId` INT NOT NULL AUTO_INCREMENT, userId int default NULL, drugId int default null, oldPrescription tinyint, primary key (prescriptionId), key fk_prescriptions_1_idx (drugId), key fk_prescriptions_2_idx (userId), constraint fk_prescription_1 foreign key (drugId) references db.drugs (drugId), constraint fk_prescription_2 foreign key (userId) references db.users (id))",
-    function(err, result, fields) {
-      if (err) {
-        console.log(err);
-        throw err;
-      }
-      res.end(JSON.stringify(result));
-    });
-
-})
 
 //DELETE prescription for user
-app.delete('/deleteprescription/:uid/:drugId', async (req, res) => {
-	var uid = req.param('uid');
+app.delete('/deleteprescription/:userId/:drugId', async (req, res) => {
+	var userId = req.param('userId');
 	var drugid = req.param('drugid');
 
-	  connection.query("DELETE FROM prescriptions WHERE uid = ? AND drugid = ?", [uid, drugid] ,function (err, result, fields) {
+	  connection.query("DELETE FROM prescriptions WHERE userId = ? AND drugid = ?", [userId, drugid] ,function (err, result, fields) {
 		  if (err)
 			  return console.error(error.message);
 		  res.end(JSON.stringify(result));
@@ -505,16 +523,16 @@ app.delete('/deleteprescription/:uid/:drugId', async (req, res) => {
   });
 
 //DELET ACCOUNT
-app.delete('/deleteaccount/:uid', async (req, res) => {
-	var uid = req.param('uid');
+app.delete('/deleteaccount/:userId', async (req, res) => {
+	var uid = req.param('userId');
 
-	  connection.query("DELETE FROM prescriptions WHERE uid = ?", uid,function (err, result, fields) {
+	  connection.query("DELETE FROM prescriptions WHERE userId = ?", userId,function (err, result, fields) {
 		  if (err)
 			  return console.error(error.message);
 		  res.end(JSON.stringify(result));
 		});
 
-	connection.query("DELETE FROM users WHERE uid = ?", uid,function (err, result, fields) {
+	connection.query("DELETE FROM users WHERE userId = ?", userId,function (err, result, fields) {
 		if (err)
 			return console.error(error.message);
 		res.end(JSON.stringify(result));
@@ -522,7 +540,7 @@ app.delete('/deleteaccount/:uid', async (req, res) => {
   });
 
 //DELETE Pharmacy
-app.delete('/removepharmacy/:pharmacy', async (req, res) => {
+/*app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 	var pharmacy = req.param('pharmacy');
 
 	  connection.query("DELETE FROM prescriptions WHERE pharmacy = ?", pharmacy,function (err, result, fields) {
@@ -532,12 +550,12 @@ app.delete('/removepharmacy/:pharmacy', async (req, res) => {
 		});
 
 
-  });
+  });*/
 
 
 // GET persciptions
 app.get('allprescriptions', function (req, res) {
-	connection.query("SELECT * FROM prescriptions GROUP BY uid", function (err, result, fields) {
+	connection.query("SELECT * FROM prescriptions GROUP BY userId", function (err, result, fields) {
     if(err){
       logger.error("No prescription");
       res.status(400).send(err);
@@ -555,7 +573,7 @@ app.get('allprescriptions', function (req, res) {
 });
 
 // GET persciptions for pharmacy
-app.get('prescriptionsforpharmacy/:pharmacy', function (req, res) {
+/*app.get('prescriptionsforpharmacy/:pharmacy', function (req, res) {
 	var pharmacy = req.param('pharmacy');
 
 	connection.query("SELECT * FROM prescriptions where pharmacy = ? GROUP BY uid", pharmacy, function (err, result, fields) {
@@ -573,26 +591,38 @@ app.get('prescriptionsforpharmacy/:pharmacy', function (req, res) {
       });
     }
 	});
-});
+});*/
 
 // GET persciptions for user
-app.get('/usersprescriptions/:uid', function (req, res) {
-	var uid = req.param('uid');
-	connection.query("SELECT * FROM prescriptions WHERE uid = ?", uid, function (err, result, fields) {
-		if(err){
-      logger.error("No prescription");
-      res.status(400).send(err);
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      });
+app.get('/usersprescriptions', function (req, res) {
+	let query = "SELECT p.perscriptionID, p.oldPerscription, d.name, d.description AS DrugDescription,"
+  query += " di.description AS DiseaseDescription, s.description AS SymptomDescription, se.description AS SideEffectDescription"
+  query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
+  query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
+  query += " d.sideEffectId = se.sideEffectId where userId = " + req.query.userId;
+	console.log(query);
+  connection.query(query, (err,rows, result) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed getting a prescription");
+      res.status(400);
     }
-    else{
+    var i = 0;
+    if(rows[0] == undefined)
+    {
       res.status(200).json({
-        "Data": rows
-      });
+        "data" : i
+      })
     }
-	});
+    else
+    {
+      i = i + 1;
+      res.status(200).json({
+        "data" : i
+      })
+    }
+
+  })
 });
 
 // GET by Price for drugs
@@ -625,7 +655,7 @@ app.put('changedrugcost/:drugId/:price', function (req, res) {
 });
 
 // PUT change cost of prescription
-app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
+/*app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
 	var uid = req.param('uid');
 	var drugId = req.param('drugId')
 	var cost = req.param('cost');
@@ -633,7 +663,7 @@ app.put('/changeprescriptioncost/:uid/:drugId/:cost', function (req, res) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
-});
+});*/
 
 // PUT changes side effect
 app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
@@ -641,6 +671,28 @@ app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
 	var sideEffectId = req.param('sideEffectId');
 
 	connection.query("UPDATE prescriptions SET sideEffectId = ? WHERE drugId = ?", [sideEffectId, drugId], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+
+// PUT changes symptom
+app.put('/changeSymptomt/:drugId/:symptomId', function (req, res) {
+	var drugId = req.param('drugId')
+	var symptomId = req.param('symptomId');
+
+	connection.query("UPDATE prescriptions SET symptomId = ? WHERE drugId = ?", [symptomId, drugId], function (err, result, fields) {
+		if (err) throw err;
+		res.end(JSON.stringify(result)); // Result in JSON format
+	});
+});
+
+// PUT changes disease
+app.put('/changeDisease/:drugId/:diseaseId', function (req, res) {
+	var drugId = req.param('drugId')
+	var diseaseId = req.param('diseaseId');
+
+	connection.query("UPDATE prescriptions SET diseaseId = ? WHERE drugId = ?", [diseaseId, drugId], function (err, result, fields) {
 		if (err) throw err;
 		res.end(JSON.stringify(result)); // Result in JSON format
 	});
