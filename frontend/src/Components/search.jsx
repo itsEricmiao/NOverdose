@@ -169,6 +169,12 @@ export class Search extends React.Component{
       </>
     );
   }
+  componentDidMount()
+  {
+      this.noverdoseRepo.symptoms().then(symptom => {
+        console.log(symptom);
+    });
+  }
 }
 
 export default Search;

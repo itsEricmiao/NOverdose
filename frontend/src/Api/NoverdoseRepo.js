@@ -39,6 +39,27 @@ export class NoverdoseRepo {
                 });
         });
     }
+    updateUserByID(id, name, email, password, specialist, dob) {
+        console.log(id);
+        new Promise((resolve, reject) => {
+            axios.put(`${this.url}/updateUser`,
+                {
+                            id: id,
+                            name: name,
+                            email:email,
+                            password:password,
+                            specialist: specialist,
+                            dob: dob
+                        }, this.config)
+                .then(response=>{
+                        console.log(response);
+                     }
+                )
+                .catch(error => {
+                   alert( error)
+                });
+        });
+    }
 
     addPerscription(drugId,userId) {
         var checkIfInDb = 0;
@@ -81,6 +102,15 @@ export class NoverdoseRepo {
         {
             return 1;
         }
+    }
+
+    symptoms()
+    {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/getSymptoms`, {})
+            .then(resp => resolve(resp.data))
+            .catch(resp => alert(resp));
+        });
     }
     
     search(name, disease, symptom, min, max, sideEffect) {
