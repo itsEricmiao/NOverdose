@@ -2,11 +2,8 @@ import React from 'react';
 import {NoverdoseRepo} from '../Api/NoverdoseRepo';
 import { Redirect } from 'react-router-dom';
 import NavBar from "./navBar";
-
 export default class ProfilePage extends React.Component {
-
     repo = new NoverdoseRepo();
-
     constructor(props)
     {
         super(props)
@@ -18,15 +15,16 @@ export default class ProfilePage extends React.Component {
             birthday:'',
             homePage: false
         };
-
     }
-
     goHome = e => {
         this.setState({homePage: true});
     }
-
-
-
+    updateUserInfo = (id, name, email, password, birthday) => {
+        let specialist= 1;
+        this.repo.updateUserByID(id, name, email, password, specialist, birthday);
+        console.log("Updating user info");
+        console.log(this.state);
+    }
     componentWillMount() {
         let newid = +this.props.match.params.id;
         if (newid) {
@@ -43,7 +41,6 @@ export default class ProfilePage extends React.Component {
                 );
         }
     }
-
     render() {
         return (
             <>
@@ -57,9 +54,8 @@ export default class ProfilePage extends React.Component {
                                name="name"
                                className="form-control"
                                value={this.state.name}
-                               onChange={e => this.setState({ name: e.target.value, title: e.target.value })} />
+                               onChange={e => this.setState({ name: e.target.value})} />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input type="text"
@@ -69,7 +65,6 @@ export default class ProfilePage extends React.Component {
                                value={this.state.email}
                                onChange={e => this.setState({ email: e.target.value })} />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="birthday">Birthday</label>
                         <input type="text"
@@ -79,7 +74,6 @@ export default class ProfilePage extends React.Component {
                                value={this.state.birthday}
                                onChange={e => this.setState({ birthday: e.target.value })} />
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="birthday">Password</label>
                         <input type="text"
@@ -89,10 +83,9 @@ export default class ProfilePage extends React.Component {
                                value={this.state.password}
                                onChange={e => this.setState({ password: e.target.value })} />
                     </div>
-
                     <button className="btn btn-primary btn-block" onClick={this.goHome}>Go Back</button>
                         {this.state.homePage && <Redirect to={"/dashboard/" + this.state.id}/>}
-                    <button className="btn btn-primary btn-block">Save</button>
+                    <button className="btn btn-primary btn-block" onClick={() => this.updateUserInfo(this.state.id, this.state.name, this.state.email, this.state.password,  this.state.birthday)}>Save</button>
                 </form>
             </>
         );

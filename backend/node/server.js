@@ -235,14 +235,18 @@ app.post("/createSideEffects", function(req,res) {
   });
 });
 
-app.post("/addSideEffect", function (req, res) {
-  let name = req.body.name;
-  let query = "insert into symptoms (symptomId, name) values(" + ` NULL, '${req.body.name}'`+ ")";
-  connection.query(query, (err, result) => {
+app.post("/getSymptoms", function (req, res) {
+  let query = "Select * from symptoms";
+  connection.query(query, (err, rows, feild) => {
     if(err) {
       console.log(err);
-      logger.error("failed adding a sideEfffect");
+      logger.error("failed getting a symptom");
       res.status(400);
+    }
+    else{
+      res.status(200).json({
+        "data": rows
+      })
     }
   })
 });
@@ -439,17 +443,11 @@ app.get("/login", function (req, res) {
     })
 });
 
-app.put("/updateUser/:id/:name/:email/:password/:specialist/:dob", function (req, res) {
+app.put("/updateUser", function (req, res) {
 
-  var id = req.param("id");
-  var name = req.param("name");
-  var email = req.param("email");
-  var password = req.param("password");
-  var specialist = req.param("specialist");
-  var dob = req.param("dob");
-
+  console.log(req.body.id);
   connection.query("UPDATE users SET name = ?, email = ?, password = ?, specialist = ?, dob = ? WHERE id = ?",
-  [name, email, password, specialist, dob, id],
+  [req.body.name, req.body.email, req.body.password, req.body.specialist, req.body.dob, req.body.id],
   function (err, result, fields) {
 
     if (err) {
@@ -457,6 +455,7 @@ app.put("/updateUser/:id/:name/:email/:password/:specialist/:dob", function (req
       throw err;
     }
     else
+    console.log(result);
       res.end(JSON.stringify(result));
 
   });
