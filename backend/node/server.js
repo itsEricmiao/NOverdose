@@ -1,4 +1,4 @@
-const express = require('express');
+prescriptionconst express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql');
@@ -59,37 +59,6 @@ app.post('/reset', (req, res) => {
   res.status(200).send('created the table');
 });
 
-//POST /multplynumber
-app.post('/multplynumber', (req, res) => {
-  console.log(req.body.product);
-
-  connection.query('INSERT INTO `db`.`test_table` (`value`) VALUES(\'' + req.body.product + '\')', function (err, rows, fields) {
-    if (err){
-      logger.error("Problem inserting into test table");
-    }
-    else {
-      res.status(200).send(`added ${req.body.product} to the table!`);
-    }
-  });
-});
-
-//GET /checkdb
-app.get('/values', (req, res) => {
-  connection.query('SELECT value FROM `db`.`test_table`', function (err, rows, fields) {
-    if (err) {
-      logger.error("Error while executing Query");
-      res.status(400).json({
-        "data": [],
-        "error": "MySQL error"
-      })
-    }
-    else{
-      res.status(200).json({
-        "data": rows
-      });
-    }
-  });
-});
 
 //connecting the express object to listen on a particular port as defined in the config object.
 app.listen(config.port, config.host, (e) => {
@@ -403,7 +372,7 @@ app.post("/addPrescription", function (req, res) {
 });
 
 app.get("/searchPrescription", function (req, res) {
-  let query = "SELECT p.perscriptionID, p.oldPerscription, d.name, d.description AS DrugDescription,"
+  let query = "SELECT p.prescriptionID, p.oldPrescription, d.name, d.description AS DrugDescription,"
   query += " di.description AS DiseaseDescription, s.description AS SymptomDescription, se.description AS SideEffectDescription"
   query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
   query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
@@ -595,7 +564,7 @@ app.get('allprescriptions', function (req, res) {
 
 // GET persciptions for user
 app.get('/usersprescriptions', function (req, res) {
-	let query = "SELECT p.perscriptionID, p.oldPerscription, d.name, d.description AS DrugDescription,"
+	let query = "SELECT p.prescriptionID, p.oldPrescription, d.name, d.description AS DrugDescription,"
   query += " di.description AS DiseaseDescription, s.description AS SymptomDescription, se.description AS SideEffectDescription"
   query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
   query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
@@ -645,7 +614,7 @@ app.get('/drugprices', function (req, res) {
 });
 
 //PUT change price of drug
-app.put('changedrugcost/:drugId/:price', function (req, res) {
+app.put('/changedrugcost/:drugId/:price', function (req, res) {
 	var drugId = req.param('drugId');
 	var price = req.param('price');
 	connection.query("UPDATE prescriptions SET price = ? WHERE drugId = ? ", [price, drugId], function (err, result, fields) {
@@ -677,7 +646,7 @@ app.put('/changeSideEffect/:drugId/:sideEffectId', function (req, res) {
 });
 
 // PUT changes symptom
-app.put('/changeSymptomt/:drugId/:symptomId', function (req, res) {
+app.put('/changeSymptom/:drugId/:symptomId', function (req, res) {
 	var drugId = req.param('drugId')
 	var symptomId = req.param('symptomId');
 
