@@ -17,8 +17,9 @@ export default class MainPage extends React.Component {
             name: '',
             email: '',
             password: '',
-            birthday: '1995-01-01',
+            birthday: '',
             medications: [ "MEDICATIONS1", "MEDICATIONS2", "MEDICATIONS3"],
+            specialist: 'Special',
             profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
             addPrescription: false,
             allDrugs: drugs
@@ -49,10 +50,23 @@ export default class MainPage extends React.Component {
         if (id) {
             this.repo.getUserById(id)
                 .then(curuser => {
+                        let rawBday = curuser.user[0].dob;
+                        if (rawBday == null){
+                            rawBday = "0000-00-00";
+                        }
+
+                        let userType = curuser.user[0].specialist;
+                        var job = "Normal User";
+                        if(userType == 1){
+                            job = "Medical Specialist"
+                        }
+                        let bday = rawBday.slice(0,10);
                         this.setState({
                             id: curuser.user[0].id,
                             name: curuser.user[0].name,
                             email: curuser.user[0].email,
+                            birthday: bday,
+                            specialist:job,
                             password: curuser.user[0].password,
                         })
                     }
@@ -70,10 +84,10 @@ export default class MainPage extends React.Component {
     }
 
     renderUserPrescriptions=()=>{
-       return(
-           this.state.allDrugs.map((x, y) =>
-               <div className="row">
-                <DrugCard key={y} {...x} />
+        return(
+            this.state.allDrugs.map((x, y) =>
+                <div className="row">
+                    <DrugCard key={y} {...x} />
 
                     <button className="btn btn-secondary btn-lg disabled "
                             style={{ margin: "auto" }}
@@ -81,8 +95,8 @@ export default class MainPage extends React.Component {
                         Delete Prescription
                     </button>
 
-            </div>
-        )
+                </div>
+            )
         );
     }
 
@@ -100,8 +114,8 @@ export default class MainPage extends React.Component {
                 to={{
                     pathname:'/prescription',
                     state: {
-                    id: this.state.id
-                }
+                        id: this.state.id
+                    }
                 }}
             />
         }
@@ -109,15 +123,15 @@ export default class MainPage extends React.Component {
 
     render() {
         var sampleUser = new User
-                                (
-                                    this.state.id,
-                                    this.state.name,
-                                    this.state.email,
-                                    this.state.password,
-                                    this.state.birthday,
-                                    this.state.medications,
-                                    this.state.profilePicUrl
-                                );
+        (
+            this.state.id,
+            this.state.name,
+            this.state.email,
+            this.state.password,
+            this.state.birthday,
+            this.state.specialist,
+            this.state.profilePicUrl
+        );
 
         return (
             <>
