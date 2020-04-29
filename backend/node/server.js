@@ -231,6 +231,36 @@ app.get("/getSymptoms", function (req, res) {
     }
   })
 });
+app.get("/getSideEffects", function (req, res) {
+  let query = "Select * from sideEffects";
+  connection.query(query, (err, rows, feild) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed getting a sideEffects");
+      res.status(400);
+    }
+    else{
+      res.status(200).json({
+        "data": rows
+      })
+    }
+  })
+});
+app.get("/getDiseases", function (req, res) {
+  let query = "Select * from diseases";
+  connection.query(query, (err, rows, feild) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed getting a diseases");
+      res.status(400);
+    }
+    else{
+      res.status(200).json({
+        "data": rows
+      })
+    }
+  })
+});
 
 
 

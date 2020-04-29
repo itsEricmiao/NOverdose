@@ -6,6 +6,8 @@ import { NoverdoseRepo } from '../Api/NoverdoseRepo';
 import NavBar from './navBar';
 import './search.css';
 import Symptom from "../models/symptom";
+import SideEffect from "../models/sideEffect";
+import { Link } from "react-router-dom";
 
 export class Search extends React.Component{
 
@@ -24,7 +26,8 @@ export class Search extends React.Component{
         symptoms: [],
         sideEffects:[],
         diseases:[],
-        drugName: ''
+        drugName: '',
+        specialist: null,
     }
 
     search(name, disease, symptom, min, max, sideEffect)
@@ -34,6 +37,18 @@ export class Search extends React.Component{
                 console.log(returnDrugs);
                 this.setState({drugs: returnDrugs});
             });
+    }
+    
+    setSpecial()
+    {
+        if(this.state.specialist == 0)
+        {
+            this.setState({specialist: false});
+        }
+        else
+        {
+            this.setState({specialist: true});
+        }
     }
 
     addPerscription(drugId, name)
@@ -79,7 +94,7 @@ export class Search extends React.Component{
                         onChange={ e => this.setState( { disease: e.target.value } ) }>
                     <option></option>
                     {
-                        DISEASE.map((d, i) => <option key={ i } value={ d.id }>{ d.name }</option>)
+                        this.state.diseases.map((d, i) => <option key={ i } value={ d.diseaseId }>{ d.name }</option>)
                     }
                 </select>
                 </div>
@@ -105,7 +120,7 @@ export class Search extends React.Component{
                         onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
                     <option></option>
                     {
-                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.symptomId }>{ d.name }</option>)
+                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.sideEffectId }>{ d.name }</option>)
                     }
                 </select>
                 </div>
@@ -153,10 +168,24 @@ export class Search extends React.Component{
                     </tr>
                 </thead>
                 <tbody>
-                    {
+                    {this.state.specialist == 0 &&
                         this.state.drugs.map((p, i) =>
                                 <tr key = {i}>
                                     <td key = {i}>{ p.name }</td>
+                                    <td key = {i}>{ p.symptomDesc }</td>
+                                    <td key = {i}>{ p.diseaseDesc }</td>
+                                    <td key = {i}>{ p.sideEffectDesc }</td>
+                                    <td key = {i} className = "text-right">${ p.price }</td>
+                                    <td key = {i}>
+                                        <button className = "btn btn-success float-right" onClick = {() => this.addPerscription(p.drugId, p.name)}>+</button>
+                                    </td>
+                                </tr>
+                        )
+                    }
+                    {this.state.specialist == 1 &&
+                        this.state.drugs.map((p, i) =>
+                                <tr key = {i}>
+                                    <td key = {i}><Link to = {"../update/" + this.state.id}>{ p.name }</Link></td>
                                     <td key = {i}>{ p.symptomDesc }</td>
                                     <td key = {i}>{ p.diseaseDesc }</td>
                                     <td key = {i}>{ p.sideEffectDesc }</td>
@@ -175,9 +204,20 @@ export class Search extends React.Component{
   }
   componentDidMount()
   {
-      this.noverdoseRepo.symptoms().then(symptom => {
-          console.log(symptom.data);
-          this.setState({symptoms: symptom.data, sideEffects: symptom.data})
+    this.setState({id:+this.props.match.params.id})
+      let id = +this.props.match.params.id;
+      this.noverdoseRepo.getUserById(id).then(user => {
+        console.log(user.user[0].specialist);
+        this.setState({specialist: user.user[0].specialist})
+  });
+    this.noverdoseRepo.symptoms().then(symptom => {
+          this.setState({symptoms: symptom.data})
+    });
+    this.noverdoseRepo.sideEffects().then(sideEffect => {
+        this.setState({sideEffects: sideEffect.data})
+    });
+    this.noverdoseRepo.diseases().then(disease => {
+        this.setState({diseases: disease.data})
     });
   }
 }

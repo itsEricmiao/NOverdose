@@ -113,15 +113,33 @@ export class NoverdoseRepo {
         });
     }
     
+    sideEffects()
+    {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/getSideEffects`, {})
+            .then(resp => resolve(resp.data))
+            .catch(resp => alert(resp));
+        });
+    }
+
+    diseases()
+    {
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/getDiseases`, {})
+            .then(resp => resolve(resp.data))
+            .catch(resp => alert(resp));
+        });
+    }
+    
     search(name, disease, symptom, min, max, sideEffect) {
         var where = "";
-        if(sideEffect == 1 || sideEffect == undefined)
+        if(sideEffect == 4000 || sideEffect == undefined)
         {
             if(name == '"N/A"' || name == '"n/a"' || name == undefined)
             {
-                if(disease == 1 || disease == undefined)
+                if(disease == 6000 || disease == undefined)
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -206,7 +224,7 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -292,9 +310,9 @@ export class NoverdoseRepo {
             }
             else
             {
-                if(disease == 1 || disease == undefined)
+                if(disease == 6000 || disease == undefined)
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -380,7 +398,7 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -469,9 +487,9 @@ export class NoverdoseRepo {
         {
             if(name == '"N/A"' || name == '"n/a"' || name == undefined)
             {
-                if(disease == 1 || disease == undefined)
+                if(disease == 6000 || disease == undefined)
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -556,7 +574,7 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -642,9 +660,9 @@ export class NoverdoseRepo {
             }
             else
             {
-                if(disease == 1 || disease == undefined)
+                if(disease == 6000 || disease == undefined)
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000 || symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {
@@ -729,7 +747,7 @@ export class NoverdoseRepo {
                 }
                 else
                 {
-                    if(symptom == 1 || symptom == undefined)
+                    if(symptom == 5000|| symptom == undefined)
                     {
                         if(min == 'N/A' || min == 'n/a' || min == undefined)
                         {

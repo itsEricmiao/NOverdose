@@ -10,6 +10,6 @@ export const ROUTES = [
     { path: '/dashboard/:id', component: MainPage },
     { path: '/profile/:id', component: ProfilePage},
     { path: '/register', component: RegisterPage },
-    { path: '/prescription/:id', component: DrugForm },
+    { path: '/update/:id', component: DrugForm },
     { path: '/', component: Login }
 ]
