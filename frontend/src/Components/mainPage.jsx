@@ -170,7 +170,8 @@ export default class MainPage extends React.Component {
                     <div className={"container text-center"}>
                         <h1 className={"display-6"}>Current Prescription</h1>
                         <br></br>
-                        {this.showButtonBasedOnSpecialist()}
+                        <button className="btn btn-primary btn-lg " onClick={() => this.setPrescriptionRedirect()}>Add New Prescription</button>
+        
                     </div>
                     <div className="col"
                          style={{ columns: "1" }}>
