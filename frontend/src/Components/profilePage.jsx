@@ -102,6 +102,7 @@ export default class ProfilePage extends React.Component {
                         <label htmlFor="userAccountType">Account Type</label>
                         <form>
                             <select className="form-control"
+                                    value={this.state.specialist}
                                     onChange={e =>
                                         this.setState(
                                             { specialist: e.target.value }

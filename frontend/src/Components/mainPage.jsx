@@ -18,7 +18,7 @@ export default class MainPage extends React.Component {
             password: '',
             birthday: '',
             specialist: 'Special',
-            profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
+            profilePicUrl:'',
             addPrescription: false,
             allDrugs: drugs,
             pastPrescriptions: [],
@@ -27,6 +27,15 @@ export default class MainPage extends React.Component {
         };
     }
     componentWillMount() {
+        let links = [
+            "https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg",
+            "https://andygreenwell.com/wp-content/uploads/2019/02/best-headshot-photographers-MI-32101.jpg",
+            "https://photos.headshotcrew.com/styles/large/s3/photos/35943/03/1/43/998cee2cdc3cb3fb06e52243b623f519.jpg?itok=KvM9pSTr",
+            "https://images.squarespace-cdn.com/content/v1/5c869a3765a70789cd2f45cb/1561643929478-ZN0ZQMLFESRTGL5CN7TK/ke17ZwdGBToddI8pDm48kHmLeEzARneXWVNN3KN0jJZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QHyNOqBUUEtDDsRWrJLTmlMqpINHCYwrjchQjceiMlVzRPhPN2AV6lVr4IpL0Z89NSReZj_I3-pvnrfPpd5Aa/Headshot-woman-red.jpg"
+        ]
+        let index = Math.floor(Math.random() * 4);
+        console.log("index = " + index)
+        this.setState({ profilePicUrl: links[index] });
         let id = +this.props.match.params.id;
         if (id) {
             this.repo.getUserById(id)
