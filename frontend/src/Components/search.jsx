@@ -22,18 +22,21 @@ export class Search extends React.Component{
         minPrice: '',
         maxPrice: '',
         sideEffect: '',
+        pharmacy: '',
         drugs: [],
         symptoms: [],
         sideEffects:[],
         diseases:[],
+        pharmacies: [],
         drugName: '',
         specialist: null,
+        drugId: ''
     }
 
-    search(name, disease, symptom, min, max, sideEffect)
+    search(name, disease, symptom, min, max, sideEffect, pharmacy)
     {
             name = '"' + name + '"';
-            this.noverdoseRepo.search(name, disease, symptom, min, max, sideEffect).then(returnDrugs => {
+            this.noverdoseRepo.search(name, disease, symptom, min, max, sideEffect,pharmacy).then(returnDrugs => {
                 console.log(returnDrugs);
                 this.setState({drugs: returnDrugs});
             });
@@ -77,18 +80,27 @@ export class Search extends React.Component{
                 <h3 className="card-title">Search NOverdose </h3>
                 <h6 className="card-title text-danger">(If not applicable, enter "N/A") </h6>
                 <div className="form-group">
-                    <label htmlFor="search_name">Name<span className="text-danger">*</span></label>
+                    <label >Name<span className="text-danger">*</span></label>
                         <input type="text"
-                            id="search_name"
-                            name="search_name"
                             className="form-control"
                             value={ this.state.name }
                             onChange={ e => this.setState( { name: e.target.value } ) } />
                 </div>
                 <div className="form-group">
-                <label htmlFor="search_departmentId">Disease<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <label >Pharmacy<span className="text-danger">*</span></label>
+                <select 
+                        className="form-control"
+                        value={ this.state.pharmacy }
+                        onChange={ e => this.setState( { pharmacy: e.target.value } ) }>
+                    <option></option>
+                    {
+                        this.state.pharmacies.map((d, i) => <option key={ i } value={ d.pharmacyId }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
+                <div className="form-group">
+                <label >Disease<span className="text-danger">*</span></label>
+                <select 
                         className="form-control"
                         value={ this.state.disease }
                         onChange={ e => this.setState( { disease: e.target.value } ) }>
@@ -99,9 +111,8 @@ export class Search extends React.Component{
                 </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="search_departmentId">Symptoms<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <label>Symptoms<span className="text-danger">*</span></label>
+                <select 
                         className="form-control"
                         value={ this.state.symptom }
                         onChange={ e => this.setState( { symptom: e.target.value } ) }>
@@ -112,9 +123,8 @@ export class Search extends React.Component{
                 </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="search_departmentId">Side Effects<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <label >Side Effects<span className="text-danger">*</span></label>
+                <select 
                         className="form-control"
                         value={ this.state.sideEffect }
                         onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
@@ -163,6 +173,7 @@ export class Search extends React.Component{
                         <th>Symptom</th>
                         <th>Disease</th>
                         <th>Side Effect</th>
+                        <th>Pharmacy</th>
                         <th className = "text-right">Price</th>
                         <th className = "text-right">Add Perscription</th>
                     </tr>
@@ -172,10 +183,11 @@ export class Search extends React.Component{
                         this.state.drugs.map((p, i) =>
                                 <tr key = {i}>
                                     <td key = {i}>{ p.name }</td>
-                                    <td key = {i}>{ p.symptomDesc }</td>
-                                    <td key = {i}>{ p.diseaseDesc }</td>
-                                    <td key = {i}>{ p.sideEffectDesc }</td>
-                                    <td key = {i} className = "text-right">${ p.price }</td>
+                                    <td key = {i}>{ p.SymptomName }</td>
+                                    <td key = {i}>{ p.DiseaseName }</td>
+                                    <td key = {i}>{ p.SideEffectName }</td>
+                                    <td key = {i}>{ p.PharmacyName }</td>
+                                    <td key = {i} className = "text-right">{ p.price }</td>
                                     <td key = {i}>
                                         <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
                                     </td>
@@ -185,11 +197,12 @@ export class Search extends React.Component{
                     {this.state.specialist == 1 &&
                         this.state.drugs.map((p, i) =>
                                 <tr key = {i}>
-                                    <td key = {i}><Link to = {"../update/" + this.state.id}>{ p.name }</Link></td>
-                                    <td key = {i}>{ p.symptomDesc }</td>
-                                    <td key = {i}>{ p.diseaseDesc }</td>
-                                    <td key = {i}>{ p.sideEffectDesc }</td>
-                                    <td key = {i} className = "text-right">${ p.price }</td>
+                                    <td key = {i}><Link to = {"../update/" + this.state.id + "/" + p.drugId}>{ p.name }</Link></td>
+                                    <td key = {i}>{ p.SymptomName }</td>
+                                    <td key = {i}>{ p.DiseaseName }</td>
+                                    <td key = {i}>{ p.SideEffectName }</td>
+                                    <td key = {i}>{ p.PharmacyName }</td>
+                                    <td key = {i} className = "text-right">{ p.price }</td>
                                     <td key = {i}>
                                         <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
                                     </td>
@@ -218,6 +231,9 @@ export class Search extends React.Component{
     });
     this.noverdoseRepo.diseases().then(disease => {
         this.setState({diseases: disease.data})
+    });
+    this.noverdoseRepo.pharmacies().then(pharmacy => {
+        this.setState({pharmacies: pharmacy.data})
     });
   }
 }
