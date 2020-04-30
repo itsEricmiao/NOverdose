@@ -122,6 +122,25 @@ export class NoverdoseRepo {
                         console.log('here');
                         checkIfInDb = 1;
                     }
+                    else if(x.data.data == "2")
+                    {
+                        console.log(x.data.prescription);
+                        var oldVal = 0;
+                        new Promise((resolve, reject) => {
+                            axios.put(`${this.url}/updatePrescription`,
+                                {
+                                    id: x.data.prescription.prescriptionId,
+                                    pastPrescription: oldVal
+                                        }, this.config)
+                                .then(response=>{
+                                        console.log(response);
+                                    }
+                                )
+                                .catch(error => {
+                                alert( error)
+                                });
+                        });
+                    }
                     else
                     {
                         return new Promise((resolve, reject) => {
