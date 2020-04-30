@@ -6,7 +6,7 @@ import drugs from './TempData/drug';
 import { NoverdoseRepo } from '../Api/NoverdoseRepo';
 import { Redirect} from 'react-router-dom';
 import User from '../models/user';
-
+import Drug from '../models/drug';
 export default class MainPage extends React.Component {
     repo = new NoverdoseRepo();
     constructor(props) {
@@ -23,7 +23,8 @@ export default class MainPage extends React.Component {
             profilePicUrl: 'https://quindry.com/wp-content/gallery/people/Philadelphia-business-headshot-36-Square.jpg',
             addPrescription: false,
             allDrugs: drugs,
-            pastPrescriptions: []
+            pastPrescriptions: [],
+            currentPrescriptions: []
         };
     }
 
@@ -55,6 +56,44 @@ export default class MainPage extends React.Component {
                     }
                 );
         }
+
+        this.repo.getPrescription(id)
+            .then(x => {
+                console.log(JSON.stringify(x.data));
+                let len = x.data.length;
+                let cPrescriptions = [];
+                let pPrescriptions = [];
+                for(let i = 0; i < len; i++)
+                {
+                
+                    console.log(JSON.stringify(x.data[i]));
+                    if (x.data[i].oldPrescription == 0) {
+                        let curPrescription = new Drug(
+                            x.data[i].prescriptionID,
+                            x.data[i].name,
+                            x.data[i].price,
+                            x.data[i].DrugDescription,
+                            x.data[i].SideEffectDescription,
+                            x.data[i].pharmacy)
+                        cPrescriptions.push(curPrescription);
+                    } else if (x.data[i].oldPrescription == 1) {
+                        let curPrescription = new Drug(
+                            x.data[i].prescriptionID,
+                            x.data[i].name,
+                            x.data[i].price,
+                            x.data[i].DrugDescription,
+                            x.data[i].SideEffectDescription,
+                            x.data[i].pharmacy)
+                        pPrescriptions.push(curPrescription);
+                    }
+                }
+                this.setState({pastPrescriptions: pPrescriptions});
+                this.setState({currentPrescriptions: cPrescriptions});
+                console.log(JSON.stringify(cPrescriptions[0]));
+                console.log("current Prescription length: " + this.state.pastPrescriptions.length)
+            }).catch(x=>{
+            alert(x);
+        })
     }
 
 
@@ -62,18 +101,17 @@ export default class MainPage extends React.Component {
         console.log("deleting["+name+"]");
         let list = this.state.pastPrescriptions.concat(name);
         this.setState({pastPrescriptions: list})
-        let newDrugList = this.state.allDrugs.filter(function( obj ) {
+        let newDrugList = this.state.currentPrescriptions.filter(function( obj ) {
             return obj.name !== name;
         });
-        this.setState({allDrugs:newDrugList});
+        this.setState({currentPrescriptions:newDrugList});
     }
 
     renderUserPrescriptions=()=>{
         return(
-            this.state.allDrugs.map((x, y) =>
+            this.state.currentPrescriptions.map((x, y) =>
                 <div className="row">
                     <DrugCard key={y} {...x} />
-
                     <button className="btn btn-secondary btn-lg disabled "
                             style={{ margin: "auto" }}
                             onClick={()=>this.delete(x.name)}>
@@ -94,7 +132,7 @@ export default class MainPage extends React.Component {
 
 
     renderPrescriptionRedirect = () => {
-        let newPath = '/prescription/' + this.state.id;
+        let newPath = '/search/' + this.state.id;
         if (this.state.addPrescription) {
             return <Redirect
                 to={{

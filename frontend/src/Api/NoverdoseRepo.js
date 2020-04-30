@@ -29,6 +29,20 @@ export class NoverdoseRepo {
         });
     }
 
+    getPrescription(userID){
+        console.log(userID);
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.url}/usersprescriptions`, {params: {userId: userID}}, this.config)
+                .then(x => resolve(x.data))
+                .catch(x => {
+                    alert(x);
+                    reject(x);
+                });
+        });
+    }
+
+    
+
     getUserById(id) {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/users/${id}`, this.config)
@@ -39,7 +53,6 @@ export class NoverdoseRepo {
                 });
         });
     }
-
     getDrugById(id) {
         return new Promise((resolve, reject) => {
             axios.get(`${this.url}/getDrugId/${id}`, this.config)

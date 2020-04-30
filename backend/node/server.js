@@ -167,7 +167,7 @@ app.post("/createDrugs", function(req,res) {
       }
   });
 
-	query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(45) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL, pharmacyId int DEFAULT NULL, PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId), KEY fk_drugs_4_idx (pharmacyId), CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId), CONSTRAINT fk_drugs_4 FOREIGN KEY (pharmacyId) REFERENCES pharmacies (pharmacyId))";
+	query = "CREATE TABLE drugs (drugId int NOT NULL AUTO_INCREMENT,name varchar(45) DEFAULT NULL,description varchar(500) DEFAULT NULL,price INT DEFAULT NULL,sideEffectId int DEFAULT NULL,diseaseId int DEFAULT NULL,symptomId int DEFAULT NULL, pharmacyId int DEFAULT NULL, PRIMARY KEY (drugId),KEY fk_drugs_1_idx (sideEffectId),KEY fk_drugs_2_idx (diseaseId),KEY fk_drugs_3_idx (symptomId), KEY fk_drugs_4_idx (pharmacyId), CONSTRAINT fk_drugs_1 FOREIGN KEY (sideEffectId) REFERENCES sideEffects (sideEffectId),CONSTRAINT fk_drugs_2 FOREIGN KEY (diseaseId) REFERENCES diseases (diseaseId),CONSTRAINT fk_drugs_3 FOREIGN KEY (symptomId) REFERENCES symptoms (symptomId), CONSTRAINT fk_drugs_4 FOREIGN KEY (pharmacyId) REFERENCES pharmacies (pharmacyId))";
 
 
 	connection.query(query, function(err, result) {
@@ -634,35 +634,26 @@ app.get('allprescriptions', function (req, res) {
 
 // GET persciptions for user
 app.get('/usersprescriptions', function (req, res) {
-	let query = "SELECT p.prescriptionID, p.oldPrescription, d.name, d.description AS DrugDescription,"
-  query += " di.name AS DiseaseName, s.name AS SymptomName, se.name AS SideEffectName, ph.name AS PharmacyName"
+	let query = "SELECT p.prescriptionID, p.oldPrescription, d.price, d.name, d.description AS DrugDescription,"
+  query += " di.name AS DiseaseDescription, s.name AS SymptomDescription, se.name AS SideEffectDescription"
   query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
   query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
-  query += " d.sideEffectId = se.sideEffectId INNER JOIN pharmacies ph ON d.pharmacyId = ph.pharmacyId where userId = " + req.query.userId;
+  query += " d.sideEffectId = se.sideEffectId where userId = " + req.query.userId;
 	console.log(query);
   connection.query(query, (err,rows, result) => {
     if(err) {
       console.log(err);
       logger.error("failed getting a prescription");
       res.status(400);
-    }
-    var i = 0;
-    if(rows[0] == undefined)
-    {
+    }else{
       res.status(200).json({
-        "data" : i
-      })
-    }
-    else
-    {
-      i = i + 1;
-      res.status(200).json({
-        "data" : i
-      })
+              "data" : rows
+            })
     }
 
   })
 });
+
 
 // GET by Price for drugs
 app.get('/drugprices', function (req, res) {
