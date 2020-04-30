@@ -109,6 +109,24 @@ export class NoverdoseRepo {
         });
     }
 
+    updatePrescriptionByID(id) {
+        var oldVal = 1;
+        new Promise((resolve, reject) => {
+            axios.put(`${this.url}/updatePrescription`,
+                {
+                    id: id,
+                    pastPrescription: oldVal
+                        }, this.config)
+                .then(response=>{
+                        console.log(response);
+                     }
+                )
+                .catch(error => {
+                   alert( error)
+                });
+        });
+    }
+
     addPrescription(drugId,userId) {
         var checkIfInDb = 0;
         var returnValue = 0;

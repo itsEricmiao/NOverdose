@@ -96,7 +96,7 @@ export class RegisterPage extends React.Component {
 
                 <div className="login-form">
                     <button className = "btn btn-primary btn-lg btn-block" type="button"  onClick={() => this.registerUser(this.state.name, this.state.email, this.state.password, this.state.currentPassword)}>Register</button>
-                    {console.log(this.state.confirm), this.state.registered && <Redirect to={'/dashboard/' + this.state.id}/>}
+                    {console.log(this.state.confirm), this.state.registered && <Redirect to={'/profile/' + this.state.id}/>}
                 </div>
             </form>
         </>;
