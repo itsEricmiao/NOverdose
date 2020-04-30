@@ -204,7 +204,7 @@ export class Search extends React.Component{
   }
   componentDidMount()
   {
-    this.setState({id:+this.props.match.params.id})
+    this.setState({id: +this.props.match.params.id})
       let id = +this.props.match.params.id;
       this.noverdoseRepo.getUserById(id).then(user => {
         console.log(user.user[0].specialist);

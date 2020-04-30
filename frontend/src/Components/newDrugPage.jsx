@@ -2,180 +2,172 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { button } from 'bootstrap';
 import NavBar from "./navBar";
-import {NoverdoseRepo} from "../Api/NoverdoseRepo";
-import {DISEASE} from "../constants";
+import { NoverdoseRepo } from '../Api/NoverdoseRepo';
 
 export default class DrugForm extends React.Component {
 
     noverdoseRepo = new NoverdoseRepo();
 
     state = {
-        id:'',
-        added: null,
-        name: '',
-        disease: '',
-        symptom: '',
-        minPrice: '',
-        maxPrice: '',
-        sideEffect: '',
-        drugs: [],
+        id: "",
+        name: "",
+        price: "",
+        description: "",
+        pharmacy: "",
         symptoms: [],
         sideEffects:[],
         diseases:[],
-        drugName: ''
+        sideEffect:"",
     }
 
-    search(name, disease, symptom, min, max, sideEffect)
-    {
-        name = '"' + name + '"';
-        this.noverdoseRepo.search(name, disease, symptom, min, max, sideEffect).then(returnDrugs => {
-            console.log(returnDrugs);
-            this.setState({drugs: returnDrugs});
-        });
+    goHome = e => {
+        this.setState({homePage: true});
     }
 
-    addPerscription(drugId, name)
+    updateDrug()
     {
-        console.log(drugId);
-        var returnValue = this.noverdoseRepo.addPerscription(drugId, this.props.match.params.id);
-        console.log(returnValue);
-        if(returnValue == "perscriptionAdded")
-        {
-            this.setState({added: true});
-        }
-        else
-        {
-            this.setState({added: true});
-            this.setState({drugName: name});
-        }
+        
     }
+
+    componentWillMount() {
+        this.noverdoseRepo.symptoms().then(symptom => {
+            this.setState({symptoms: symptom.data})
+      });
+      this.noverdoseRepo.sideEffects().then(sideEffect => {
+          this.setState({sideEffects: sideEffect.data})
+      });
+      this.noverdoseRepo.diseases().then(disease => {
+          this.setState({diseases: disease.data})
+      });
+        console.log(JSON.stringify(this.props.location.state))
+        let newID = +this.props.match.params.id;
+        this.setState({id: newID});
+        console.log("componentWillMount")
+        console.log("id = "+newID);
+    }
+
 
     render() {
         return (
             <>
                 <NavBar id={this.props.match.params.id}/>
-                <div className = "container">
-                    <div className="card mt-3 mb-3">
-                        <div className="card-body">
-                            <h3 className="card-header bg-secondary text-white">Add Prescription </h3>
-                            <h6 className="card-title text-danger">(If not applicable, enter "N/A") </h6>
-                            <div className="form-group">
-                                <label htmlFor="search_name">Name<span className="text-danger">*</span></label>
-                                <input type="text"
-                                       id="search_name"
-                                       name="search_name"
-                                       className="form-control"
-                                       value={ this.state.name }
-                                       onChange={ e => this.setState( { name: e.target.value } ) } />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="search_departmentId">Disease<span className="text-danger">*</span></label>
-                                <select id="search_departmentId"
-                                        name="search_departmentId"
-                                        className="form-control"
-                                        value={ this.state.disease }
-                                        onChange={ e => this.setState( { disease: e.target.value } ) }>
-                                    <option></option>
-                                    {
-                                        DISEASE.map((d, i) => <option key={ i } value={ d.id }>{ d.name }</option>)
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="search_departmentId">Symptoms<span className="text-danger">*</span></label>
-                                <select id="search_departmentId"
-                                        name="search_departmentId"
-                                        className="form-control"
-                                        value={ this.state.symptom }
-                                        onChange={ e => this.setState( { symptom: e.target.value } ) }>
-                                    <option></option>
-                                    {
-                                        this.state.symptoms.map((d, i) => <option key={ i } value={ d.symptomId }>{ d.name }</option>)
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="search_departmentId">Side Effects<span className="text-danger">*</span></label>
-                                <select id="search_departmentId"
-                                        name="search_departmentId"
-                                        className="form-control"
-                                        value={ this.state.sideEffect }
-                                        onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
-                                    <option></option>
-                                    {
-                                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.symptomId }>{ d.name }</option>)
-                                    }
-                                </select>
-                            </div>
-                            <div className="row">
-                                <div className="col-5">
-                                    <br></br>
-                                    <label>Minimum Price<span className="text-danger">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={this.state.minPrice}
-                                        onChange={ e => this.setState({ minPrice: e.target.value })} />
-                                </div>
-                                <div className="col-5">
-                                    <br></br>
-                                    <label>Maximum Price<span className="text-danger">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={this.state.maxPrice}
-                                        onChange={ e => this.setState({ maxPrice: e.target.value })} />
-                                </div>
-                            </div>
-                            <div className="mt-2">
-                                <button type="button" className="btn btn-primary" onClick={() => this.search(this.state.name, this.state.disease, this.state.symptom, this.state.minPrice, this.state.maxPrice, this.state.sideEffect)}>
-                                    Search
-                                </button>
-                            </div>
+                <div className="container">
+                <div className="mt-4">
+                <div className="card-header bg-secondary text-white">
+                    <h3>Update Drug</h3>
+                </div>
+
+                <div className="card-body">
+                    <div className="row">
+                        <div className="col-sm-8">
+                            <label htmlFor="prescriptionName">Drug Name</label>
+                        </div>
+
+
+                        <div className="col-sm-2 align-text-left">
+                            <label htmlFor="userRate">Pharmacy</label>
                         </div>
                     </div>
 
-                    <br></br>
-                    {this.state.added == true && <h1 className = "text-center text-success">Perscription Sent to the Pharmacy!</h1>}
-                    {this.state.added == false && <h1 className = "text-center text-danger">Perscription Has Already Been Sent!</h1>}
-                    <br></br>
-                    <table className="table table-striped table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Symptom</th>
-                            <th>Disease</th>
-                            <th>Side Effect</th>
-                            <th className = "text-right">Price</th>
-                            <th className = "text-right">Add Perscription</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            this.state.drugs.map((p, i) =>
-                                <tr key = {i}>
-                                    <td key = {i}>{ p.name }</td>
-                                    <td key = {i}>{ p.symptomDesc }</td>
-                                    <td key = {i}>{ p.diseaseDesc }</td>
-                                    <td key = {i}>{ p.sideEffectDesc }</td>
-                                    <td key = {i} className = "text-right">${ p.price }</td>
-                                    <td key = {i}>
-                                        <button className = "btn btn-success float-right" onClick = {() => this.addPerscription(p.drugId, p.name)}>+</button>
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        </tbody>
-                    </table>
+                    <div className="row">
+                        <div className="col-sm-8">
+                            <div className="input-group mb-3">
+                                <input
+                                    type="text"
+                                    id="userName"
+                                    className="form-control"
+                                    onChange={e => this.setState({ userName: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+
+                        <form>
+                            <select
+                                className="form-control"
+                                onChange={e => this.setState({ rating: e.target.value })}
+                            >
+                                <option defaultValue="" />
+                                <option value="1">Pharmacy 1</option>
+                                <option value="2">Pharmacy 2</option>
+                                <option value="3">Pharmacy 3</option>
+                                <option value="4">Pharmacy 4</option>
+                                <option value="5">Pharmacy 5</option>
+                            </select>
+                        </form>
+                    </div>
+
+                    <div className="row">
+                        <div className="col">
+                            <label htmlFor="cost">Cost:</label>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col">
+                        <textarea
+                            type="text"
+                            className="form-control-sm"
+                            id="cost"
+                            onChange={e => this.setState({ sideEffect: e.target.value })}
+                        />
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div className="form-group">
+                <label htmlFor="search_departmentId">Disease<span className="text-danger">*</span></label>
+                <select id="search_departmentId"
+                        name="search_departmentId"
+                        className="form-control"
+                        value={ this.state.disease }
+                        onChange={ e => this.setState( { disease: e.target.value } ) }>
+                    <option></option>
+                    {
+                        this.state.diseases.map((d, i) => <option key={ i } value={ d.diseaseId }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
+                <div className="form-group">
+                <label htmlFor="search_departmentId">Symptoms<span className="text-danger">*</span></label>
+                <select id="search_departmentId"
+                        name="search_departmentId"
+                        className="form-control"
+                        value={ this.state.symptom }
+                        onChange={ e => this.setState( { symptom: e.target.value } ) }>
+                    <option></option>
+                    {
+                        this.state.symptoms.map((d, i) => <option key={ i } value={ d.symptomId }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
+                <div className="form-group">
+                <label htmlFor="search_departmentId">Side Effects<span className="text-danger">*</span></label>
+                <select id="search_departmentId"
+                        name="search_departmentId"
+                        className="form-control"
+                        value={ this.state.sideEffect }
+                        onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
+                    <option></option>
+                    {
+                        this.state.sideEffects.map((d, i) =><option key={ i } value={ d.sideEffectId }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
+
+                    <div className="row">
+                        <div className="col">
+                            <button className="btn btn-secondary btn-lg disabled" onClick={this.goHome}>Back</button>
+                            {this.state.homePage && <Redirect to={"/dashboard/"+ this.state.id}/>}
+                        </div>
+                        <div className="col">
+                            <button className="btn btn-primary btn-lg" >Submit</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
                 </div>
             </>
         );
-    }
-    componentDidMount()
-    {
-        this.noverdoseRepo.symptoms().then(symptom => {
-            console.log(symptom.data);
-            this.setState({symptoms: symptom.data, sideEffects: symptom.data})
-        });
     }
 }
