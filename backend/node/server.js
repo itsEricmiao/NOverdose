@@ -414,7 +414,7 @@ app.post("/addPrescription", function (req, res) {
 });
 
 app.get("/searchPrescription", function (req, res) {
-  let query = "SELECT p.perscriptionId, d.name AS DrugName, ph.name AS PharmacyName from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN pharmacies ph ON d.pharmacyId = ph.pharmacyId where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
+  let query = "SELECT *  from prescriptions where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
   console.log(query);
   connection.query(query, (err,rows, result) => {
     if(err) {
@@ -586,35 +586,26 @@ app.get('allprescriptions', function (req, res) {
 
 // GET persciptions for user
 app.get('/usersprescriptions', function (req, res) {
-	let query = "SELECT p.prescriptionID, p.oldPrescription, d.name, d.description AS DrugDescription,"
-  query += " di.name AS DiseaseName, s.name AS SymptomName, se.name AS SideEffectName, ph.name AS PharmacyName"
+	let query = "SELECT p.prescriptionID, p.oldPrescription, d.price, d.name, d.description AS DrugDescription,"
+  query += " di.name AS DiseaseDescription, s.name AS SymptomDescription, se.name AS SideEffectDescription"
   query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
   query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
-  query += " d.sideEffectId = se.sideEffectId INNER JOIN pharmacies ph ON d.pharmacyId = ph.pharmacyId where userId = " + req.query.userId;
+  query += " d.sideEffectId = se.sideEffectId where userId = " + req.query.userId;
 	console.log(query);
   connection.query(query, (err,rows, result) => {
     if(err) {
       console.log(err);
       logger.error("failed getting a prescription");
       res.status(400);
-    }
-    var i = 0;
-    if(rows[0] == undefined)
-    {
+    }else{
       res.status(200).json({
-        "data" : i
-      })
-    }
-    else
-    {
-      i = i + 1;
-      res.status(200).json({
-        "data" : i
-      })
+              "data" : rows
+            })
     }
 
   })
 });
+
 
 // GET by Price for drugs
 app.get('/drugprices', function (req, res) {

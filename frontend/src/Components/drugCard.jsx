@@ -56,11 +56,11 @@ export default function DrugCard(drug) {
         <div className="DrugCard" style={{padding: "20px",margin: "20px"}}>
         <Card fluid color="blue" style={{ height: "100%"}}>
                     <Card.Content header={drug.name} textAlign="center" />
-                    <Card.Content header={drug.price} textAlign="center" />
+          <Card.Content header={ '$'+drug.price} textAlign="center" />
                     <Card.Content description={drug.description} />
                     <Card.Content description={drug.pharmacy} />
           <ExtraContentAccordion
-            content={drug.sideEffect}
+            content={drug.sideEffectId}
             onToggle={toggleCard(0)}
             open={state[0]}
           />
