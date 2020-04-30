@@ -137,7 +137,7 @@ app.post("/createPrescriptions", function (req, res) {
       }
   });
 
-  connection.query("create table db.prescriptions(`prescriptionId` INT NOT NULL AUTO_INCREMENT, userId int default NULL, drugId int default null, oldPrescription tinyint, primary key (prescriptionId), key fk_prescriptions_1_idx (drugId), key fk_prescriptions_2_idx (userId), constraint fk_prescription_1 foreign key (drugId) references db.drugs (drugId), constraint fk_prescription_2 foreign key (userId) references db.users (id))",
+  connection.query("create table prescriptions(`prescriptionId` INT NOT NULL AUTO_INCREMENT, userId int default NULL, drugId int default null, oldPrescription tinyint, primary key (prescriptionId), key fk_prescriptions_1_idx (drugId), key fk_prescriptions_2_idx (userId), constraint fk_prescription_1 foreign key (drugId) references db.drugs (drugId), constraint fk_prescription_2 foreign key (userId) references db.users (id))",
     function(err, result, fields) {
       if (err) {
         console.log(err);
@@ -388,16 +388,12 @@ app.post("/addPrescription", function (req, res) {
 });
 
 app.get("/searchPrescription", function (req, res) {
-  let query = "SELECT p.prescriptionID, p.oldPrescription, d.name, d.description AS DrugDescription,"
-  query += " di.description AS DiseaseDescription, s.description AS SymptomDescription, se.description AS SideEffectDescription"
-  query += " from prescriptions p INNER JOIN drugs d ON p.drugId = d.drugId INNER JOIN diseases di ON d.diseaseId = di.diseaseId";
-  query += " INNER JOIN symptoms s ON d.symptomId = s.symptomId INNER JOIN sideEffects se ON"
-  query += " d.sideEffectId = se.sideEffectId where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
+  let query = "SELECT *  from prescriptions where userId = " + req.query.userId +  " AND  drugId = " + req.query.drugId;
   console.log(query);
   connection.query(query, (err,rows, result) => {
     if(err) {
       console.log(err);
-      logger.error("failed adding a prescription");
+      logger.error("failed adding a perscription");
       res.status(400);
     }
     var i = 0;

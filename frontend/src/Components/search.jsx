@@ -51,10 +51,10 @@ export class Search extends React.Component{
         }
     }
 
-    addPerscription(drugId, name)
+    addPrescription(drugId, name)
     {
         console.log(drugId);
-        var returnValue = this.noverdoseRepo.addPerscription(drugId, this.props.match.params.id);
+        var returnValue = this.noverdoseRepo.addPrescription(drugId, this.props.match.params.id);
             console.log(returnValue);
             if(returnValue == "perscriptionAdded")
             {
@@ -177,7 +177,7 @@ export class Search extends React.Component{
                                     <td key = {i}>{ p.sideEffectDesc }</td>
                                     <td key = {i} className = "text-right">${ p.price }</td>
                                     <td key = {i}>
-                                        <button className = "btn btn-success float-right" onClick = {() => this.addPerscription(p.drugId, p.name)}>+</button>
+                                        <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
                                     </td>
                                 </tr>
                         )
@@ -191,7 +191,7 @@ export class Search extends React.Component{
                                     <td key = {i}>{ p.sideEffectDesc }</td>
                                     <td key = {i} className = "text-right">${ p.price }</td>
                                     <td key = {i}>
-                                        <button className = "btn btn-success float-right" onClick = {() => this.addPerscription(p.drugId, p.name)}>+</button>
+                                        <button className = "btn btn-success float-right" onClick = {() => this.addPrescription(p.drugId, p.name)}>+</button>
                                     </td>
                                 </tr>
                         )

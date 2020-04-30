@@ -61,12 +61,12 @@ export class NoverdoseRepo {
         });
     }
 
-    addPerscription(drugId,userId) {
+    addPrescription(drugId,userId) {
         var checkIfInDb = 0;
         var returnValue = 0;
         console.log('here');
         new Promise((resolve, reject) => {
-            axios.get(`${this.url}/searchPerscription`, {params: {drugId: drugId, userId: userId}}, this.config)
+            axios.get(`${this.url}/searchPrescription`, {params: {drugId: drugId, userId: userId}}, this.config)
                 .then(x => {
                     console.log(x.data.data);
                     if(x.data.data == "1")
@@ -77,9 +77,9 @@ export class NoverdoseRepo {
                     else
                     {
                         return new Promise((resolve, reject) => {
-                            axios.post(`${this.url}/addPerscription`, {drugId: drugId, userId: userId}, this.config)
+                            axios.post(`${this.url}/addPrescription`, {drugId: drugId, userId: userId}, this.config)
                                 .then(x => {
-                                    console.log("perscriptionAdded");
+                                    console.log("prescriptionAdded");
                                     returnValue = 1;
                                 })
                                 .catch(x => {
