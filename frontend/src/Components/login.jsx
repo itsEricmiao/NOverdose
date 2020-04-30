@@ -61,7 +61,7 @@ class Login extends React.Component{
             <div className="login-form">
             <div className="form-group">
                     <label htmlFor="search_name">Password</label>
-                        <input type="text"
+                        <input type="password"
                             name="Password"
                             className="form-control"
                             value={ this.state.password }

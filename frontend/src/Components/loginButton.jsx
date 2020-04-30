@@ -20,6 +20,15 @@ export const ErrorMessage = props => {
                             
 }
 
+export const RegisterErrorMessage = props => {
+    
+    console.log('here');
+    return<div>
+        <h3 className = "error">Passwords Dont Match!</h3>
+    </div>
+                            
+}
+
 export const RegisterButton = props => {
     
     return<div>
