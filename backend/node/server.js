@@ -444,6 +444,14 @@ app.get("/searchPrescription", function (req, res) {
         "data" : i
       })
     }
+    else if(rows[0].oldPrescription == 1)
+    {
+      i = i+2;
+      res.status(200).json({
+        "data" : i,
+        "prescription" : rows[0] 
+      })
+    }
     else
     {
       i = i + 1;
@@ -454,6 +462,22 @@ app.get("/searchPrescription", function (req, res) {
 
   })
 });
+
+app.put("/updatePrescription", function (req, res) {
+  console.log("API updatePrescription");
+  console.log(req.body.id);
+  connection.query("UPDATE prescriptions SET oldPrescription = ? WHERE prescriptionId = ?",
+  [req.body.pastPrescription, req.body.id],
+  function (err, result, fields) {
+   if (err) {
+    console.log(err);
+    throw err;
+   }
+   else
+   console.log(result);
+    res.end(JSON.stringify(result));
+  });
+ });
 
 app.get('/getDrugId/:id', function (req, res) {
 	connection.query("SELECT * FROM drugs WHERE drugId = ?", [req.params['id']], function (err, result, fields) {
