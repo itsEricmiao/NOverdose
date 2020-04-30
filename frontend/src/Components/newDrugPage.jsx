@@ -13,22 +13,30 @@ export default class DrugForm extends React.Component {
         name: "",
         price: "",
         description: "",
-        pharmacy: "",
+        pharmacies: [],
+        pharmacy: '',
         symptoms: [],
         sideEffects:[],
         diseases:[],
         sideEffect:"",
+        drugs: [],
+        pharmacy: '',
+        disease: '',
+        sideEffect: '',
+        symptom: '',
+        description: '',
+        update: false
     }
 
     goHome = e => {
         this.setState({homePage: true});
     }
-
-    updateDrug()
+    update()
     {
-        
+        console.log(this.state.disease);
+        this.noverdoseRepo.updateDrugById(this.state.drugs.drugId,this.state.name,this.state.pharmacy,this.state.disease,this.state.symptom,this.state.sideEffect,this.state.price,this.state.description);
+        this.setState({update: true})
     }
-
     componentWillMount() {
         this.noverdoseRepo.symptoms().then(symptom => {
             this.setState({symptoms: symptom.data})
@@ -39,6 +47,23 @@ export default class DrugForm extends React.Component {
       this.noverdoseRepo.diseases().then(disease => {
           this.setState({diseases: disease.data})
       });
+      this.noverdoseRepo.pharmacies().then(pharmacy => {
+        this.setState({pharmacies: pharmacy.data})
+    });
+      this.noverdoseRepo.getDrugById(+this.props.match.params.drugId).then(drug => {
+        console.log(drug.drug);
+        this.setState({drugs: drug.drug[0]});
+        this.setState({name: drug.drug[0].name});
+        this.setState({name: drug.drug[0].name});
+        this.setState({disease: drug.drug[0].diseaseId});
+        this.setState({symptom: drug.drug[0].symptomId});
+        this.setState({sideEffect: drug.drug[0].sideEffectId});
+        this.setState({pharmacy: drug.drug[0].pharmacyId});
+        this.setState({description: drug.drug[0].description});
+        this.setState({price: drug.drug[0].price});
+        console.log(this.state.drugs);
+
+  });
         console.log(JSON.stringify(this.props.location.state))
         let newID = +this.props.match.params.id;
         this.setState({id: newID});
@@ -54,71 +79,36 @@ export default class DrugForm extends React.Component {
                 <div className="container">
                 <div className="mt-4">
                 <div className="card-header bg-secondary text-white">
-                    <h3>Update Drug</h3>
+                    {this.state.update == false && <h3>Update Drug</h3>}
+                    {this.state.update == true && <h3>Update Drug <span className = "text-success float-right">Drug Has Been Updated!</span></h3>}
+                    
                 </div>
 
                 <div className="card-body">
-                    <div className="row">
-                        <div className="col-sm-8">
-                            <label htmlFor="prescriptionName">Drug Name</label>
-                        </div>
-
-
-                        <div className="col-sm-2 align-text-left">
-                            <label htmlFor="userRate">Pharmacy</label>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col-sm-8">
-                            <div className="input-group mb-3">
-                                <input
-                                    type="text"
-                                    id="userName"
-                                    className="form-control"
-                                    onChange={e => this.setState({ userName: e.target.value })}
-                                />
-                            </div>
-                        </div>
-
-
-                        <form>
-                            <select
-                                className="form-control"
-                                onChange={e => this.setState({ rating: e.target.value })}
-                            >
-                                <option defaultValue="" />
-                                <option value="1">Pharmacy 1</option>
-                                <option value="2">Pharmacy 2</option>
-                                <option value="3">Pharmacy 3</option>
-                                <option value="4">Pharmacy 4</option>
-                                <option value="5">Pharmacy 5</option>
-                            </select>
-                        </form>
-                    </div>
-
-                    <div className="row">
-                        <div className="col">
-                            <label htmlFor="cost">Cost:</label>
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col">
-                        <textarea
-                            type="text"
-                            className="form-control-sm"
-                            id="cost"
-                            onChange={e => this.setState({ sideEffect: e.target.value })}
-                        />
-                        </div>
-                    </div>
-                    <br/>
-
-                    <div className="form-group">
-                <label htmlFor="search_departmentId">Disease<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <div className="form-group">
+                    <label htmlFor="search_name">Name</label>
+                        <input type="text"
+                            id="search_name"
+                            name="search_name"
+                            className="form-control"
+                            value={ this.state.name }
+                            onChange={ e => this.setState( { name: e.target.value } ) } />
+                </div>
+                <div className="form-group">
+                <label>Pharmacy</label>
+                <select
+                        className="form-control"
+                        value={ this.state.pharmacy }
+                        onChange={ e => this.setState( { pharmacy: e.target.value } ) }>
+                    <option></option>
+                    {
+                        this.state.pharmacies.map((d, i) => <option key={ i } value={ d.pharmacyId }>{ d.name }</option>)
+                    }
+                </select>
+                </div>
+                <div className="form-group">
+                <label>Disease</label>
+                <select 
                         className="form-control"
                         value={ this.state.disease }
                         onChange={ e => this.setState( { disease: e.target.value } ) }>
@@ -129,9 +119,8 @@ export default class DrugForm extends React.Component {
                 </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="search_departmentId">Symptoms<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <label >Symptoms</label>
+                <select 
                         className="form-control"
                         value={ this.state.symptom }
                         onChange={ e => this.setState( { symptom: e.target.value } ) }>
@@ -142,9 +131,8 @@ export default class DrugForm extends React.Component {
                 </select>
                 </div>
                 <div className="form-group">
-                <label htmlFor="search_departmentId">Side Effects<span className="text-danger">*</span></label>
-                <select id="search_departmentId"
-                        name="search_departmentId"
+                <label >Side Effects</label>
+                <select 
                         className="form-control"
                         value={ this.state.sideEffect }
                         onChange={ e => this.setState( { sideEffect: e.target.value } ) }>
@@ -154,16 +142,32 @@ export default class DrugForm extends React.Component {
                     }
                 </select>
                 </div>
-
-                    <div className="row">
-                        <div className="col">
-                            <button className="btn btn-secondary btn-lg disabled" onClick={this.goHome}>Back</button>
-                            {this.state.homePage && <Redirect to={"/dashboard/"+ this.state.id}/>}
-                        </div>
-                        <div className="col">
-                            <button className="btn btn-primary btn-lg" >Submit</button>
-                        </div>
-                    </div>
+                <div className="form-group">
+                </div>
+                <div className="row">
+                                <div className="col-5">
+                                    <label>Price</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={this.state.price }
+                                        onChange={ e => this.setState({ price: e.target.value })} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <br></br>
+                    <label htmlFor="search_name">Description</label>
+                        <textarea
+                            className="form-control"
+                            rows = "10"
+                            value={ this.state.description }
+                            onChange={ e => this.setState( { description: e.target.value } ) } />
+                </div>
+                <div className="mt-2">
+                    <button type="button" className="btn btn-primary" onClick={() => this.update()}>
+                        Update
+                    </button>
+                </div>
                 </div>
                 </div>
                 </div>

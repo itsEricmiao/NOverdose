@@ -231,6 +231,21 @@ app.get("/getSymptoms", function (req, res) {
     }
   })
 });
+app.get("/getPharmacies", function (req, res) {
+  let query = "Select * from pharmacies";
+  connection.query(query, (err, rows, feild) => {
+    if(err) {
+      console.log(err);
+      logger.error("failed getting a pharmacy");
+      res.status(400);
+    }
+    else{
+      res.status(200).json({
+        "data": rows
+      })
+    }
+  })
+});
 app.get("/getSideEffects", function (req, res) {
   let query = "Select * from sideEffects";
   connection.query(query, (err, rows, feild) => {
@@ -440,6 +455,18 @@ app.get("/searchPrescription", function (req, res) {
   })
 });
 
+app.get('/getDrugId/:id', function (req, res) {
+	connection.query("SELECT * FROM drugs WHERE drugId = ?", [req.params['id']], function (err, result, fields) {
+    if (err)
+      console.log(err);
+    else
+    {
+      return res.status(200).json({
+        "drug": result
+      })// Result in JSON format
+    }
+	});
+});
 app.get("/users", function (req, res) {
   let query = "select * from users;";
   connection.query(query, function(err,rows, fields) {
@@ -478,6 +505,27 @@ app.get("/login", function (req, res) {
         "id": returnId
       })
     })
+});
+
+app.put("/updateDrug", function (req, res) {
+console.log(req.body.diseaseId)
+  var query= "UPDATE drugs SET name = " + req.body.id + ", diseaseId = "+ req.body.diseaseId + ", pharmacyId = " + req.body.pharmacyId + ", symptomId = " +req.body.symptomId+ ", sideEffectId = " +req.body.sideEffectId +", description = " +req.body.description+", price = " + req.body.price + "WHERE drugId = " + req.body.drugId;
+  console.log('here');
+  connection.query("UPDATE drugs SET name = ?, diseaseId = ?, pharmacyId = ?, symptomId = ?, sideEffectId = ?, description = ?, price = ? WHERE drugId = ?",
+  [req.body.name, req.body.diseaseId, req.body.pharmacyId, req.body.symptomId, req.body.sideEffectId, req.body.description, req.body.price,req.body.id],
+  function (err, result, fields) {
+
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+    else
+    console.log(result);
+      res.end(JSON.stringify(result));
+
+  });
+
+
 });
 
 app.put("/updateUser", function (req, res) {
