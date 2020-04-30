@@ -20,4 +20,6 @@ insert into sideEffects values
 (NULL, "Insomnia"), (NULL, "Loss of Appetite"), (NULL, "Nausea"), (NULL, "Nerve Damage"), 
 (NULL, "Mucositis"), (NULL, "Scarring"), (NULL, "Stiffness"), (NULL, "Sores");
  
- 
+ insert into pharmacies values
+ (NULL, "Albertsons"), (NULL, "Care Plus"), (NULL, "CVS"), (NULL, "Cook Children"),
+ (NULL, "Park Place"), (NULL, "Walgreens");
